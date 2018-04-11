@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import func
 
 from model import connect_to_db, db, User, City, Trip, Place, SavedPlace
-
+# from server import app
 
 def seed_user():
     """Seed users table."""
@@ -42,14 +42,16 @@ def seed_trip():
     """Seed trips table."""
     # This function will demonstrate how to seed trip table.
 
-    trip1 = Trip(user_id=1, city_id=3, arrival_date=(2017, 03, 15, 16, 15),
-                 departure_date=(2017, 03, 18, 8, 00))
-    trip2 = Trip(user_id=2, city_id=1, arrival_date=(2017, 03, 20, 8, 00),
-                 departure_date=(2017, 03, 22, 20, 00))
-    trip3 = Trip(user_id=3, city_id=2, arrival_date=(2017, 04, 5, 14, 00),
-                 departure_date=(2017, 04, 6, 14, 00))
-    trip4 = Trip(user_id=2, city_id=4, arrival_date=(2017, 04, 9, 10, 00),
-                 departure_date=(2017, 04, 11, 8, 00))
+    f = '%d-%m-%Y %H:%M'
+
+    trip1 = Trip(user_id=1, city_id=3, arrival_date=datetime.strptime('15-03-2017 16:15', f),
+                 departure_date=datetime.strptime('18-03-2017 8:00', f))
+    trip2 = Trip(user_id=2, city_id=1, arrival_date=datetime.strptime('20-03-2017 08:00', f),
+                 departure_date=datetime.strptime('22-03-2017 20:00', f))
+    trip3 = Trip(user_id=3, city_id=2, arrival_date=datetime.strptime('05-04-2017 14:00', f),
+                 departure_date=datetime.strptime('06-04-2017 14:00', f))
+    trip4 = Trip(user_id=2, city_id=4, arrival_date=datetime.strptime('09-04-2017 10:00', f),
+                 departure_date=datetime.strptime('11-04-2017 08:00', f))
 
     db.session.add_all([trip1, trip2, trip3, trip4])
 
@@ -58,11 +60,11 @@ def seed_trip():
 
 
 if __name__ =='__main__':
-    from flask import Flask #make flask app
+    from flask import Flask  # make flask app
     app = Flask(__name__)
     connect_to_db(app)
 
-    db.create_all() #make the tables
-    seed_user() # seed starter data
+    db.create_all()  # make the tables
+    seed_user()  # seed starter data
     seed_city()
     seed_trip()

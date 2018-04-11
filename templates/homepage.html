@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Viseat{% endblock %}
+
+{% block content %}
+<h1>It is easy to Viseat!</h1>
+<form method="POST" action="/login">
+  <label>Email:
+    <input type="text" name="email" required>
+  </label><br>
+  <label>Password: 
+    <input type="text" name="password" required>
+  </label><br>
+  <input type="submit" value="Log In">
+</form>
+<form method="POST" action="/register">
+  <label>If you are not a user, please register<br>
+  <input type="submit" value="Register">
+  </label>
+</form>
+
+{% endblock %}
