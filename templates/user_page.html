@@ -4,5 +4,16 @@
 
 {% block content %}
 <h1>It is easy to Viseat!</h1>
-<p>Hi {{ user.fname }}</p>
+<p>Hi {{ user.fname }}</p><br>
+<form method="GET" action="/places">
+    <div>
+        <label>City</label>
+        <input type="text" name="name">
+    </div>
+    <input type="submit" value="Search!">
+</form>
+<form action="/logout" method="GET">
+      <input type="submit" value="Logout">
+</form>
+
 {% endblock %}

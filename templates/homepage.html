@@ -5,18 +5,39 @@
 {% block content %}
 <h1>It is easy to Viseat!</h1>
 <form method="POST" action="/login">
-  <label>Email:
-    <input type="text" name="email" required>
-  </label><br>
-  <label>Password: 
-    <input type="text" name="password" required>
-  </label><br>
-  <input type="submit" value="Log In">
+  <div>
+    <label>Email:
+      <input type="email" name="email" required>
+    </label><br>
+  </div>
+
+  <div>
+    <label>Password: 
+      <input type="password" name="password" required>
+    </label><br>
+  </div>
+
+  <div>
+    <input type="submit" value="Log In">
+  </div>
 </form>
-<form method="POST" action="/register">
-  <label>If you are not a user, please register<br>
-  <input type="submit" value="Register">
-  </label>
+
+<form method="GET" action="/register">
+  <div>
+    <label>If you are not a user, please register<br>
+      <input type="submit" value="Register">
+    </label>
+  </div>
 </form>
+
+<form method="GET" action="/search_user">
+  <div>
+    <label>Search for a user.<br>
+      <input type="text" name="username" required>
+    </label>
+    <input type="submit" value="Search">
+  </div>
+</form>
+
 
 {% endblock %}

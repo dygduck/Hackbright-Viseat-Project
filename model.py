@@ -23,16 +23,17 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer,
                         autoincrement=True, primary_key=True)
+    username = db.Column(db.String(30), nullable=False, unique=True)
     fname = db.Column(db.String(30), nullable=False)
     lname = db.Column(db.String(30), nullable=False)
-    email = db.Column(db.String(40), nullable=False, unique=True )
+    email = db.Column(db.String(40), nullable=False, unique=True)
     password = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<User fname={} lname={} email={}>".format(self.fname,
-                                               self.lname, self.email)
+        return "<User username={} fname={} lname={} email={}>".format(self.username,
+            self.fname, self.lname, self.email)
 
 
 

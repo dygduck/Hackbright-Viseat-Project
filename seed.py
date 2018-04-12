@@ -10,14 +10,14 @@ def seed_user():
     """Seed users table."""
     # This function will demonstrate how to seed user table.
 
-    duygu = User(fname="Duygu", lname="Ebcim", email="duygu@gmail.com",
-                 password="duckface")
-    heather = User(fname="Heather", lname="Mahan", email="heather@gmail.com",
-                   password="heatherm")
-    murat = User(fname="Murat", lname="Ozgul", email="murat@yahoo.com",
-                 password="murato")
-    romain = User(fname="Romain", lname="Komorn", email="romain@gmail.com",
-                  password="romaink")
+    duygu = User(username ="dygduck", fname="Duygu", lname="Ebcim",
+        email="duygu@gmail.com", password="duckface")
+    heather = User(username ="unicorn", fname="Heather", lname="Mahan",
+        email="heather@gmail.com", password="heatherm")
+    murat = User(username ="murti", fname="Murat", lname="Ozgul",
+        email="murat@yahoo.com", password="murato")
+    romain = User(username ="lyon", fname="Romain", lname="Komorn",
+        email="romain@gmail.com", password="romaink")
 
     db.session.add_all([duygu, heather, murat, romain])
 

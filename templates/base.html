@@ -4,13 +4,12 @@
     <title>{% block title %}TITLE HERE{% endblock %}</title>
 </head>
 <body>
- {% block content %}CONTENT HERE{% endblock %}
- <ul>
-    {% for message in get_flashed_messages() %}
+    {% block content %}CONTENT HERE{% endblock %}
+    <ul>
+        {% for message in get_flashed_messages() %}
         <li>{{ message }}</li>
-    {% endfor %}
-
-</ul>
+        {% endfor %}
+    </ul>
 
 </body>
 </html>
