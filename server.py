@@ -1,6 +1,6 @@
 """Server file for Viseat project."""
 from jinja2 import StrictUndefined
-
+from pprint import pformat
 import os
 import requests
 from flask import Flask, render_template, redirect, flash, session, request
@@ -15,7 +15,7 @@ app.secret_key = "SecretD"
 
 API_KEY = os.environ.get("YELP_API_KEY")
 
-yelp_serch_path = "https://api.yelp.com/v3/businesses/search"
+yelp_search_path = "https://api.yelp.com/v3/businesses/search"
 
 
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
@@ -133,21 +133,49 @@ def register_process():
         flash("email and username already existing, login.")
         return redirect("/")
 
+
 @app.route("/places")
 def query_api():
-    """Queries the YELP API by the input values from the user"""
+    """Queries the YELP API by the input values from the user."""
 
+    # We are getting the name of the City from user.
     name = request.args["name"]
+    # name = "Paris,75000,France"
 
     # If the required information is in the request, look for afterparties
     if name:
 
-        payload = {"location" : name
-        }
+        payload = {"location": name}
 
         headers = {"Authorization": "Bearer %s" % API_KEY}
 
-        response = request.get(yelp_serch_path +"/businesses", )
+        response = requests.get(yelp_search_path,
+            params=payload, headers=headers)
+        # print("Response pprint:\n\n\n")
+        # import pprint
+        # pprint.pprint(response)
+        # print("\n\n\nEnd Response pprint")
+        # print("Response: {}".format(response))
+
+
+        # If the response was successful (with a status code of less than 400),
+        # use the list of places from the returned JSON
+        if response.ok:
+            data = response.json()
+            businesses = data['businesses']
+
+    # If there was an error (status code between 400 and 600), use an empty list
+        else:
+            flash(":( No parties: " + data['error_description'])
+            businesses = []
+
+    return render_template("places.html", data=pformat(data),
+        results=businesses)
+
+
+
+
+
 
 
 

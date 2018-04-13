@@ -45,7 +45,7 @@ def seed_trip():
     f = '%d-%m-%Y %H:%M'
 
     trip1 = Trip(user_id=1, city_id=3, arrival_date=datetime.strptime('15-03-2017 16:15', f),
-                 departure_date=datetime.strptime('18-03-2017 8:00', f))
+                 departure_date=datetime.strptime('18-03-2017 08:00', f))
     trip2 = Trip(user_id=2, city_id=1, arrival_date=datetime.strptime('20-03-2017 08:00', f),
                  departure_date=datetime.strptime('22-03-2017 20:00', f))
     trip3 = Trip(user_id=3, city_id=2, arrival_date=datetime.strptime('05-04-2017 14:00', f),

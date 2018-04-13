@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Where To Eat{% endblock %}
+
+{% block content %}
+<h2>Here are some places</h2>
+<ul>
+    {% for business in results %}
+    <li><a href="{{ business.url }}">{{ business.name }}</a></li>
+    {% endfor %}
+</ul>
+<h2>YELP results json</h2>
+<pre>{{ data }}</pre>
+
+{% endblock %}
