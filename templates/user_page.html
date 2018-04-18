@@ -8,7 +8,7 @@
 <form method="GET" action="/places">
     <div>
         <label>City</label>
-        <input type="text" name="name" placeholder="City, zipcode, Country" required>
+        <input type="text" name="name" placeholder="City, Country" required>
     </div>
     <div>
         <label>Arrival Date</label>
@@ -18,14 +18,6 @@
         <label>Departure Date</label>
         <input type="datetime-local" name="departure_date" required>
     </div>
-    <div>
-        <label>Select</label><br>
-        <input type="checkbox" name="meal" value="Breakfast">Breakfast<br>
-        <input type="checkbox" name="meal" value="Lunch">Lunch<br>
-        <input type="checkbox" name="meal" value="Dinner">Dinner<br>
-    </div>
-
-
     <input type="submit" value="Search!">
 </form>
 <form action="/logout" method="GET">

@@ -7,6 +7,7 @@ from flask import Flask, render_template, redirect, flash, session, request
 # from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db, User, City, Trip, Place, SavedPlace
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -84,7 +85,7 @@ def search_user():
 
 @app.route('/users/<username>')
 def show_user(username):
-    """Show user info page."""
+    """Show a user info page."""
 
     user = User.query.filter_by(username=username).first()
 
@@ -135,42 +136,221 @@ def register_process():
 
 
 @app.route("/places")
-def query_api():
+def handle_entry():
     """Queries the YELP API by the input values from the user."""
 
-    # We are getting the name of the City from user.
-    name = request.args["name"]
+    if "user_id" not in session:
+        flash("You must be logged in to search.")
+        return redirect("/")
+    user_id = session["user_id"]
+
+    # We are getting the name of the City, arrival date and departure date from user.
     # name = "Paris,75000,France"
-
-    # If the required information is in the request, look for afterparties
-    if name:
-
-        payload = {"location": name}
-
-        headers = {"Authorization": "Bearer %s" % API_KEY}
-
-        response = requests.get(yelp_search_path,
-            params=payload, headers=headers)
-        # print("Response pprint:\n\n\n")
-        # import pprint
-        # pprint.pprint(response)
-        # print("\n\n\nEnd Response pprint")
-        # print("Response: {}".format(response))
+    name = request.args["name"]
 
 
-        # If the response was successful (with a status code of less than 400),
-        # use the list of places from the returned JSON
-        if response.ok:
-            data = response.json()
-            businesses = data['businesses']
+    # Change the input times into datetime format:
+    f = '%Y-%m-%dT%H:%M'
+    # arrival_date_processing = arrival_date.replace("T", " ")
+    arrival_date = datetime.strptime(request.args["arrival_date"], f)
+    # departure_date_processing = departure_date.replace("T", " ")
+    departure_date = datetime.strptime(request.args["departure_date"], f)
+    delta = departure_date - arrival_date
 
-    # If there was an error (status code between 400 and 600), use an empty list
-        else:
-            flash(":( No parties: " + data['error_description'])
-            businesses = []
+    # days_to_eat = {"2018-04-13":{"dinner":"restaurant_name_1"},
+    #                "2018-04-14":{"breakfast":"restaurant_name_2", "lunch":"restaurant_name_3", "dinner":"restaurant_name_4"}
+    #                "2018-04-15":{"breakfast":"restaurant_name_5", "lunch":"restaurant_name_6", "dinner":"restaurant_name_7"}
+    #                "2018-04-16":{"breakfast":"restaurant_name_8"}
+    #               }
 
-    return render_template("places.html", data=pformat(data),
-        results=businesses)
+    days_to_eat = {}
+
+    user = User.query.get(user_id)
+
+    if arrival_date > departure_date:
+        flash("Please be sure your that your arrival date is before than your departure date.")
+        return redirect("/users/{}".format(user.user_id))
+    elif departure_date == arrival_date:
+        flash("Sorry, you don't have enough time to eat this time.")
+        return redirect("/users/{}".format(user.user_id))
+
+    # if arrival_date.day == departure_date.day:
+
+    #     if arrival_date.time() <= datetime.time(11, 0):
+    #         # add 1 breakfast to the days_to_eat lists arrival_date dictionary
+
+    #     if arrival_date.time() <= datetime.time(15, 0):
+    #         # add 1 lunch to the days_to_eat lists arrival_date dictionary
+
+    #     if arrival_date.time() <= datetime.time(22, 0):
+    #         # add 1 dinner to the days_to_eat list arrival_date dictionary
+
+
+    # find the num of days between these two dates
+    full_day_start = arrival_date.date() + timedelta(days=1)
+    full_day_end = departure_date.date()
+    num_of_full_days = full_day_end - full_day_start
+
+    # num_of_meals = num_of_full_days.days + 2
+    num_of_meals = (num_of_full_days.days +2) + 10
+    places = {}
+
+    # querying Yelp API for breakfasts
+    breakfasts = query_api(name, "breakfast", num_of_meals, 0)
+    breakfast_recommendations = []
+    for business in breakfasts:
+        business_name = business["name"]
+        # print "breakfast business names"
+        # print business_name
+        # print "breakfast number of recs"
+        # print len(breakfast_recommendations)
+        # print breakfast_recommendations
+        # print "breakfast num of meals"
+        # print num_of_meals
+        # print "breakfast places"
+        # print places
+
+        if business_name not in places and len(breakfast_recommendations) <= num_of_meals:
+            places[business_name] = True
+            breakfast_recommendations.append(business)
+    # print "length of breakfast recomm"
+    # print len(breakfast_recommendations)
+    # print "list of places"
+    # print places
+
+    # querying Yelp API for lunches
+    lunches = query_api(name, "lunch", num_of_meals, num_of_meals)
+    lunch_recommendations = []
+    for business in lunches:
+        business_name = business["name"]
+        # print "lunch business names"
+        # print business_name
+        # print "lunch number of recs"
+        # print len(lunch_recommendations)
+        # print lunch_recommendations
+        # print "lunch num of meals"
+        # print num_of_meals
+        # print "lunch places"
+        # print places
+
+        if business_name not in places and len(lunch_recommendations) <= num_of_meals:
+            places[business_name] = True
+            lunch_recommendations.append(business)
+    # print "length of lunch recomm"
+    # print len(lunch_recommendations)
+    # print "list of places"
+    # print places
+
+
+    # querying Yelp API for dinners
+    dinners = query_api(name, "dinner", num_of_meals, num_of_meals*2)
+    dinner_recommendations = []
+    for business in dinners:
+        business_name = business["name"]
+        # print "dinner business names"
+        # print business_name
+        # print "dinner number of recs"
+        # print len(dinner_recommendations)
+        # print dinner_recommendations
+        # print "dinner num of meals"
+        # print num_of_meals
+        # print "dinner places"
+        # print places
+
+        if business_name not in places and len(dinner_recommendations) <= num_of_meals:
+            places[business_name] = True
+            dinner_recommendations.append(business)
+    # print "length of dinner recomm"
+    # print len(dinner_recommendations)
+    # print "list of places"
+    # print places
+
+    arrival_day = arrival_date.date()
+    departure_day = departure_date.date()
+
+    days_to_eat[arrival_day] = {}
+    days_to_eat[departure_day] = {}
+    if num_of_full_days != 0:
+        # add our days and meals into our days_to_eat list
+        for day in range(1, delta.days + 1):
+            key = (arrival_date + timedelta(days=day)).date()
+            days_to_eat[key] = {}
+            days_to_eat[key]["breakfast"] = breakfast_recommendations[day]
+            days_to_eat[key]["lunch"] = lunch_recommendations[day]
+            days_to_eat[key]["dinner"] = dinner_recommendations[day]
+
+
+    arrival_time = (arrival_date.hour * 100) + arrival_date.minute
+    departure_time = (departure_date.hour * 100) + departure_date.minute
+
+    if arrival_time <= 1100:
+        # add 1 breakfast to the days_to_eat lists arrival_date dictionary
+        days_to_eat[arrival_day]["breakfast"] = breakfast_recommendations[0]
+
+    if arrival_time <= 1500:
+        # add 1 lunch to the days_to_eat lists arrival_date dictionary
+        days_to_eat[arrival_day]["lunch"] = lunch_recommendations[0]
+
+    if arrival_time <= 2200:
+        # add 1 dinner to the days_to_eat list arrival_date dictionary
+        days_to_eat[arrival_day]["dinner"] = dinner_recommendations[0]
+
+    if departure_time >= 701:
+        # add 1 breakfast to the days_to_eat lists departure_date dictionary
+        days_to_eat[departure_day]["breakfast"] = breakfast_recommendations[-1]
+
+    if departure_time >= 1101:
+        # add 1 lunch to the days_to_eat lists departure_date dictionary
+        days_to_eat[departure_day]["lunch"] = lunch_recommendations[-1]
+
+    if departure_time >= 1801:
+        # add 1 dinner to the days_to_eat lists departure_date dictionary
+        days_to_eat[departure_day]["dinner"] = dinner_recommendations[-1]
+
+
+    return render_template("/places.html", days_to_eat=days_to_eat)
+
+
+def query_api(name, meal, num_of_meals, num_of_offsets):
+    """Queries the YELP API by the input values from the user."""
+    # print "num_of_meals"
+    # print num_of_meals
+    # print "meal categories"
+    # print meal
+    # print "name"
+    # print name
+
+    payload = {"location": name, "term":meal, "offset": num_of_offsets, "limit": num_of_meals}
+
+    headers = {"Authorization": "Bearer %s" % API_KEY}
+
+    response = requests.get(yelp_search_path, params=payload, headers=headers)
+    # print("Response pprint:\n\n\n")
+    # import pprint
+    # pprint.pprint(response)
+    # print("\n\n\nEnd Response pprint")
+    # print("Response: {}".format(response))
+
+
+    # If the response was successful (with a status code of less than 400),
+    # use the list of places from the returned JSON
+    if response.ok:
+        data = response.json()
+        businesses = data['businesses']
+
+# If there was an error (status code between 400 and 600), use an empty list
+    else:
+        businesses = []
+
+    # print meal
+    # print businesses
+    # print "number of businesses"
+    # print len(businesses)
+    return businesses
+
+
+
+
 
 
 
