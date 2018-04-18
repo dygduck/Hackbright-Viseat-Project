@@ -4,11 +4,11 @@
 {% block content %}
 <h2>Here are some places</h2>
 <ul>
-    {% for date in days_to_eat %}
+    {% for date in ordered_days_to_eat %}
     <li>{{ date }}</li>
     <ul>
-        {% for meal in days_to_eat[date] %}
-        <li>{{ meal }}:<a href="{{ days_to_eat[date][meal].url }}">{{ days_to_eat[date][meal].name }}</a></li>
+        {% for meal in ordered_days_to_eat[date] %}
+        <li>{{meal.meal}}:<a href="{{ meal.url }}">{{ meal.name }}</a></li>
         {% endfor%}
     </ul>
     {% endfor %}

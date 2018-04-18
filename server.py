@@ -3,6 +3,7 @@ from jinja2 import StrictUndefined
 from pprint import pformat
 import os
 import requests
+from collections import OrderedDict
 from flask import Flask, render_template, redirect, flash, session, request
 # from flask_debugtoolbar import DebugToolbarExtension
 
@@ -212,6 +213,7 @@ def handle_entry():
 
         if business_name not in places and len(breakfast_recommendations) <= num_of_meals:
             places[business_name] = True
+            business["meal"] = "breakfast"
             breakfast_recommendations.append(business)
     # print "length of breakfast recomm"
     # print len(breakfast_recommendations)
@@ -235,6 +237,7 @@ def handle_entry():
 
         if business_name not in places and len(lunch_recommendations) <= num_of_meals:
             places[business_name] = True
+            business["meal"] = "lunch"
             lunch_recommendations.append(business)
     # print "length of lunch recomm"
     # print len(lunch_recommendations)
@@ -259,6 +262,7 @@ def handle_entry():
 
         if business_name not in places and len(dinner_recommendations) <= num_of_meals:
             places[business_name] = True
+            business["meal"] = "dinner"
             dinner_recommendations.append(business)
     # print "length of dinner recomm"
     # print len(dinner_recommendations)
@@ -268,47 +272,53 @@ def handle_entry():
     arrival_day = arrival_date.date()
     departure_day = departure_date.date()
 
-    days_to_eat[arrival_day] = {}
-    days_to_eat[departure_day] = {}
     if num_of_full_days != 0:
         # add our days and meals into our days_to_eat list
         for day in range(1, delta.days + 1):
             key = (arrival_date + timedelta(days=day)).date()
-            days_to_eat[key] = {}
-            days_to_eat[key]["breakfast"] = breakfast_recommendations[day]
-            days_to_eat[key]["lunch"] = lunch_recommendations[day]
-            days_to_eat[key]["dinner"] = dinner_recommendations[day]
+            days_to_eat[key] = []
+            days_to_eat[key].append(breakfast_recommendations[day])
+            days_to_eat[key].append(lunch_recommendations[day])
+            days_to_eat[key].append(dinner_recommendations[day])
 
-
+    arrival_meals = []
+    departure_meals = []
     arrival_time = (arrival_date.hour * 100) + arrival_date.minute
     departure_time = (departure_date.hour * 100) + departure_date.minute
 
     if arrival_time <= 1100:
         # add 1 breakfast to the days_to_eat lists arrival_date dictionary
-        days_to_eat[arrival_day]["breakfast"] = breakfast_recommendations[0]
+        arrival_meals.append(breakfast_recommendations[0])
 
     if arrival_time <= 1500:
         # add 1 lunch to the days_to_eat lists arrival_date dictionary
-        days_to_eat[arrival_day]["lunch"] = lunch_recommendations[0]
+        arrival_meals.append(lunch_recommendations[0])
 
     if arrival_time <= 2200:
         # add 1 dinner to the days_to_eat list arrival_date dictionary
-        days_to_eat[arrival_day]["dinner"] = dinner_recommendations[0]
+        arrival_meals.append(dinner_recommendations[0])
 
     if departure_time >= 701:
         # add 1 breakfast to the days_to_eat lists departure_date dictionary
-        days_to_eat[departure_day]["breakfast"] = breakfast_recommendations[-1]
+        departure_meals.append(breakfast_recommendations[-1])
 
     if departure_time >= 1101:
         # add 1 lunch to the days_to_eat lists departure_date dictionary
-        days_to_eat[departure_day]["lunch"] = lunch_recommendations[-1]
+        departure_meals.append(lunch_recommendations[-1])
 
     if departure_time >= 1801:
         # add 1 dinner to the days_to_eat lists departure_date dictionary
-        days_to_eat[departure_day]["dinner"] = dinner_recommendations[-1]
+        departure_meals.append(dinner_recommendations[-1])
+
+    if len(arrival_meals) != 0:
+        days_to_eat[arrival_day] = arrival_meals
+    if len(departure_meals) != 0:
+        days_to_eat[departure_day] = departure_meals
+
+    ordered_days_to_eat = OrderedDict(sorted(days_to_eat.items(), key=lambda t:t[0]))
 
 
-    return render_template("/places.html", days_to_eat=days_to_eat)
+    return render_template("/places.html", ordered_days_to_eat=ordered_days_to_eat)
 
 
 def query_api(name, meal, num_of_meals, num_of_offsets):
