@@ -10,13 +10,13 @@ def seed_user():
     """Seed users table."""
     # This function will demonstrate how to seed user table.
 
-    duygu = User(username ="dygduck", fname="Duygu", lname="Ebcim",
+    duygu = User(username="dygduck", fname="Duygu", lname="Ebcim",
         email="duygu@gmail.com", password="duckface")
-    heather = User(username ="unicorn", fname="Heather", lname="Mahan",
+    heather = User(username="unicorn", fname="Heather", lname="Mahan",
         email="heather@gmail.com", password="heatherm")
-    murat = User(username ="murti", fname="Murat", lname="Ozgul",
+    murat = User(username="murti", fname="Murat", lname="Ozgul",
         email="murat@yahoo.com", password="murato")
-    romain = User(username ="lyon", fname="Romain", lname="Komorn",
+    romain = User(username="lyon", fname="Romain", lname="Komorn",
         email="romain@gmail.com", password="romaink")
 
     db.session.add_all([duygu, heather, murat, romain])
@@ -26,36 +26,36 @@ def seed_user():
 
 def seed_city():
     """Seed  cities table."""
-    # This function will demonstrate how to seed user table.
+    # This function will demonstrate how to seed city table.
 
-    paris = City(name="Paris")
-    london = City(name="London")
-    barcelona = City(name="Barcelona")
-    istanbul = City(name="Istanbul")
+    paris = City(city_name="paris, france")
+    london = City(city_name="london, uk")
+    barcelona = City(city_name="barcelona, spain")
+    istanbul = City(city_name="istanbul, turkey")
 
     db.session.add_all([paris, london, barcelona, istanbul])
 
     db.session.commit()
 
 
-def seed_trip():
-    """Seed trips table."""
-    # This function will demonstrate how to seed trip table.
+# def seed_trip():
+#     """Seed trips table."""
+#     # This function will demonstrate how to seed trip table.
 
-    f = '%d-%m-%Y %H:%M'
+#     f = '%d-%m-%Y %H:%M'
 
-    trip1 = Trip(user_id=1, city_id=3, arrival_date=datetime.strptime('15-03-2017 16:15', f),
-                 departure_date=datetime.strptime('18-03-2017 08:00', f))
-    trip2 = Trip(user_id=2, city_id=1, arrival_date=datetime.strptime('20-03-2017 08:00', f),
-                 departure_date=datetime.strptime('22-03-2017 20:00', f))
-    trip3 = Trip(user_id=3, city_id=2, arrival_date=datetime.strptime('05-04-2017 14:00', f),
-                 departure_date=datetime.strptime('06-04-2017 14:00', f))
-    trip4 = Trip(user_id=2, city_id=4, arrival_date=datetime.strptime('09-04-2017 10:00', f),
-                 departure_date=datetime.strptime('11-04-2017 08:00', f))
+#     trip1 = Trip(user_id=1, city_id=3, arrival_date=datetime.strptime('15-03-2017 16:15', f),
+#                  departure_date=datetime.strptime('18-03-2017 08:00', f))
+#     trip2 = Trip(user_id=2, city_id=1, arrival_date=datetime.strptime('20-03-2017 08:00', f),
+#                  departure_date=datetime.strptime('22-03-2017 20:00', f))
+#     trip3 = Trip(user_id=3, city_id=2, arrival_date=datetime.strptime('05-04-2017 14:00', f),
+#                  departure_date=datetime.strptime('06-04-2017 14:00', f))
+#     trip4 = Trip(user_id=2, city_id=4, arrival_date=datetime.strptime('09-04-2017 10:00', f),
+#                  departure_date=datetime.strptime('11-04-2017 08:00', f))
 
-    db.session.add_all([trip1, trip2, trip3, trip4])
+#     db.session.add_all([trip1, trip2, trip3, trip4])
 
-    db.session.commit()
+#     db.session.commit()
 
 
 
@@ -67,4 +67,4 @@ if __name__ =='__main__':
     db.create_all()  # make the tables
     seed_user()  # seed starter data
     seed_city()
-    seed_trip()
+    # seed_trip()

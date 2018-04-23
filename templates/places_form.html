@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Where To Eat{% endblock %}
+
+{% block content %}
+<h2>Here are some places</h2>
+<ul>
+    {% for date in ordered_days_to_eat %}
+    <li>{{ date }}</li>
+    <ul>
+        {% for meal in ordered_days_to_eat[date] %}
+        <li>{{meal.meal}}:<a href="{{ meal.url }}">{{ meal.name }}</a></li>
+        {% endfor%}
+    </ul>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+
+{% extends 'base.html' %}
+
+{% block title %}Logged In{% endblock %}
+
+{% block content %}
+<h1>It is easy to Viseat!</h1>
+<p>Hi {{ user.fname }}</p><br>
+<form method="GET" action="/places">
+    <div>
+        <label>City</label>
+        <select name="city_id" required>
+            {% for city in cities %}
+            <option value="{{city.city_id}}">{{city.city_name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>Arrival Date</label>
+        <input type="datetime-local" name="arrival_date" required>
+    </div>
+    <div>
+        <label>Departure Date</label>
+        <input type="datetime-local" name="departure_date" required>
+    </div>
+    <input type="submit" value="Search!">
+</form>
+<form action="/logout" method="GET">
+      <input type="submit" value="Logout">
+</form>
+
+{% endblock %}

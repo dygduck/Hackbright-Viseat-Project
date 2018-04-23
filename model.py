@@ -44,7 +44,7 @@ class City(db.Model):
 
     city_id = db.Column(db.Integer,
                         autoincrement=True, primary_key=True)
-    name = db.Column(db.String(40), nullable=False)
+    city_name = db.Column(db.String(40), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -84,6 +84,7 @@ class Place(db.Model):
 
     yelp_id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
+    place_url = db.Column(db.String(500), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -92,7 +93,7 @@ class Place(db.Model):
 
 
 class SavedPlace(db.Model):
-    """Place recommended to the user."""
+    """Place saved by the user."""
 
     __tablename__ = "saved_places"
 
@@ -102,6 +103,7 @@ class SavedPlace(db.Model):
     trip_id = db.Column(db.Integer, db.ForeignKey('trips.trip_id'))
     meal_datetime = db.Column(db.DateTime, nullable=False)
     meal_label = db.Column(db.String(40), nullable=False)
+
 
     # Define relationship to trip
     trip = db.relationship("Trip",

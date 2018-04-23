@@ -35,7 +35,7 @@ def show_homepage():
 @app.route("/login", methods=["POST"])
 def login_process():
     """Process Login."""
-    email = request.form["email"]
+    email = request.form["email"].lower()
     password = request.form["password"]
 
     user = User.query.filter_by(email=email).first()
@@ -58,8 +58,33 @@ def show_personal_page(user_id):
     """Show User's personal page."""
 
     user = User.query.get(user_id)
+    cities = City.query.all()
+
     if "user_id" in session and session["user_id"] == user.user_id:
-        return render_template("user_page.html", user=user)
+
+        trips = Trip.query.filter(Trip.user_id == session["user_id"]).all()
+
+        trips_dict = {}
+        for trip in trips:
+            trip_info = {
+                "city_name": trip.city.city_name,
+                "departure_date": trip.departure_date.date(),
+                "dates": {}
+            }
+            for place in trip.saved_places:
+                date = place.meal_datetime.date()
+                meals = trip_info["dates"].get(date, {})
+                meals[place.meal_label] = {"name": place.place.name, "url": place.place.place_url}
+                trip_info["dates"][date] = meals
+            trips_dict[trip.arrival_date.date()] = trip_info
+
+        import pprint
+        pprint.pprint(trips_dict)
+
+
+        return render_template("user_page.html", user=user, cities=cities,
+            trips_dict=trips_dict)
+
     return redirect("/")
 
 @app.route('/logout')
@@ -147,7 +172,10 @@ def handle_entry():
 
     # We are getting the name of the City, arrival date and departure date from user.
     # name = "Paris,75000,France"
-    name = request.args["name"]
+
+    city_id = request.args["city_id"]
+    city_name = City.query.get(city_id).city_name
+
 
 
     # Change the input times into datetime format:
@@ -197,7 +225,7 @@ def handle_entry():
     places = {}
 
     # querying Yelp API for breakfasts
-    breakfasts = query_api(name, "breakfast", num_of_meals, 0)
+    breakfasts = query_api(city_name, "breakfast", num_of_meals, 0)
     breakfast_recommendations = []
     for business in breakfasts:
         business_name = business["name"]
@@ -221,7 +249,7 @@ def handle_entry():
     # print places
 
     # querying Yelp API for lunches
-    lunches = query_api(name, "lunch", num_of_meals, num_of_meals)
+    lunches = query_api(city_name, "lunch", num_of_meals, num_of_meals)
     lunch_recommendations = []
     for business in lunches:
         business_name = business["name"]
@@ -246,7 +274,7 @@ def handle_entry():
 
 
     # querying Yelp API for dinners
-    dinners = query_api(name, "dinner", num_of_meals, num_of_meals*2)
+    dinners = query_api(city_name, "dinner", num_of_meals, num_of_meals*2)
     dinner_recommendations = []
     for business in dinners:
         business_name = business["name"]
@@ -268,6 +296,9 @@ def handle_entry():
     # print len(dinner_recommendations)
     # print "list of places"
     # print places
+    if len(dinner_recommendations) == 0 and len(lunch_recommendations) == 0 and len(breakfast_recommendations) == 0:
+        flash("Soory bla bla")
+        return redirect("/users/{}".format(user.user_id))
 
     arrival_day = arrival_date.date()
     departure_day = departure_date.date()
@@ -280,6 +311,7 @@ def handle_entry():
             days_to_eat[key].append(breakfast_recommendations[day])
             days_to_eat[key].append(lunch_recommendations[day])
             days_to_eat[key].append(dinner_recommendations[day])
+
 
     arrival_meals = []
     departure_meals = []
@@ -318,10 +350,11 @@ def handle_entry():
     ordered_days_to_eat = OrderedDict(sorted(days_to_eat.items(), key=lambda t:t[0]))
 
 
-    return render_template("/places.html", ordered_days_to_eat=ordered_days_to_eat)
+    return render_template("/places.html", ordered_days_to_eat=ordered_days_to_eat,
+        arrival_date=arrival_date, departure_date=departure_date, city_id=city_id)
 
 
-def query_api(name, meal, num_of_meals, num_of_offsets):
+def query_api(city_name, meal, num_of_meals, num_of_offsets):
     """Queries the YELP API by the input values from the user."""
     # print "num_of_meals"
     # print num_of_meals
@@ -330,7 +363,7 @@ def query_api(name, meal, num_of_meals, num_of_offsets):
     # print "name"
     # print name
 
-    payload = {"location": name, "term":meal, "offset": num_of_offsets, "limit": num_of_meals}
+    payload = {"location": city_name, "term": meal, "offset": num_of_offsets, "limit": num_of_meals}
 
     headers = {"Authorization": "Bearer %s" % API_KEY}
 
@@ -358,6 +391,56 @@ def query_api(name, meal, num_of_meals, num_of_offsets):
     # print len(businesses)
     return businesses
 
+
+@app.route("/save_places", methods=["POST"])
+def save_places():
+    """Saves the places checked by the user."""
+    user_id = session["user_id"]
+    user = User.query.get(user_id)
+
+    saved_businesses = request.form.getlist("saved_businesses")
+    city_id = request.form["city_id"]
+    arrival_date = request.form["arrival_date"]
+    departure_date = request.form["departure_date"]
+
+    # import pdb; pdb.set_trace()
+    print "HERE I AM PRINTING MY BELOVED PLACES YAY"
+    print saved_businesses
+    print city_id
+    print arrival_date
+    print departure_date
+
+
+    trip = Trip(user_id=user_id, city_id=city_id, arrival_date=arrival_date,
+                departure_date=departure_date)
+    db.session.add(trip)
+
+    for business in saved_businesses:
+        # get the name from the form
+        business_name = request.form[business+'__name']
+        # get the label from the form
+        business_label = request.form[business+'__label']
+        # get the date from the form
+        business_date = request.form[business+'__date']
+        # get the url from the form
+        business_url = request.form[business+'__url']
+        # check this place already exists in db
+        place = Place.query.get(business)
+        if place is None:
+            place = Place(yelp_id=business, name=business_name, place_url=business_url)
+        saved_place = SavedPlace(trip=trip, place=place,
+                                     meal_datetime=business_date,
+                                     meal_label=business_label)
+
+        # save the place to the database
+        db.session.add(place)
+        db.session.add(saved_place)
+
+    db.session.commit()
+
+    session["user_id"] = user.user_id
+
+    return redirect("/users/{}".format(user.user_id))
 
 
 

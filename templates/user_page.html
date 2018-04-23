@@ -5,10 +5,43 @@
 {% block content %}
 <h1>It is easy to Viseat!</h1>
 <p>Hi {{ user.fname }}</p><br>
+<div>
+{% if trips_dict == {} %}
+    <p>Hey, you haven't plan any trips yet!</p>
+{% else %}
+    <ul>
+        {% for arrival_date, trip in trips_dict.iteritems()|sort %}
+        <li>{{ arrival_date }} - {{ trip.departure_date }} - {{ trip.city_name }}</li>
+        <ul>
+            {% for date, meals in trip.dates.iteritems()|sort %}
+            <li>{{ date }}
+                <ul>
+                    {% if "breakfast" in meals %}
+                        <li>breakfast:<a href="{{ meals.breakfast.url }}"> {{ meals.breakfast.name }}</a></li>
+                    {% endif %}
+                    {% if "lunch" in meals %}
+                        <li>lunch:<a href="{{ meals.lunch.url }}"> {{ meals.lunch.name }}</a></li>
+                    {% endif %}
+                    {% if "dinner" in meals %}
+                        <li>dinner:<a href="{{ meals.dinner.url }}"> {{ meals.dinner.name }}</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </ul>
+{% endif %}
+</div>
+
 <form method="GET" action="/places">
     <div>
         <label>City</label>
-        <input type="text" name="name" placeholder="City, Country" required>
+        <select name="city_id" required>
+            {% for city in cities %}
+            <option value="{{city.city_id}}">{{city.city_name}}</option>
+            {% endfor %}
+        </select>
     </div>
     <div>
         <label>Arrival Date</label>
@@ -25,3 +58,7 @@
 </form>
 
 {% endblock %}
+
+
+
+

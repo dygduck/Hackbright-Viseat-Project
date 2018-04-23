@@ -4,13 +4,27 @@
 {% block content %}
 <h2>Here are some places</h2>
 <ul>
-    {% for date in ordered_days_to_eat %}
-    <li>{{ date }}</li>
-    <ul>
-        {% for meal in ordered_days_to_eat[date] %}
-        <li>{{meal.meal}}:<a href="{{ meal.url }}">{{ meal.name }}</a></li>
-        {% endfor%}
-    </ul>
+<form method="POST" action="/save_places">
+<input type="hidden" name="city_id" value="{{city_id}}">
+<input type="hidden" name="arrival_date" value="{{arrival_date}}">
+<input type="hidden" name="departure_date" value="{{departure_date}}">
+
+{% for date in ordered_days_to_eat %}
+<li>{{ date }}</li>
+    {% for business in ordered_days_to_eat[date] %}
+    <input type="checkbox" name="saved_businesses" value="{{business.id}}">{{business.meal}}:<a href="{{ business.url }}">{{ business.name }}</a><br>
+    <input type="hidden" name="{{business.id+'__label'}}" value="{{business.meal}}">
+    <input type="hidden" name="{{business.id+'__date'}}" value="{{date}}">
+    <input type="hidden" name="{{business.id+'__name'}}" value="{{business.name}}">
+    <input type="hidden" name="{{business.id+'__url'}}" value="{{business.url}}">
+
     {% endfor %}
+{% endfor %}
+<div>
+    <button type="submit">Save</button>
+</div>
+</form>
+
+
 </ul>
 {% endblock %}
