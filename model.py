@@ -8,9 +8,10 @@ db = SQLAlchemy()
 app = Flask(__name__)
 app.secret_key = "SecretD"
 
-def connect_to_db(app):
+def connect_to_db(app, mydb='postgresql:///viseatdb'):
     """Connect to database."""
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///testdb'
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = mydb
     app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
@@ -78,7 +79,7 @@ class Trip(db.Model):
 
 
 class Place(db.Model):
-    """Places to show to the user in website."""
+    """All places saved in website."""
 
     __tablename__ = "places"
 
@@ -93,7 +94,7 @@ class Place(db.Model):
 
 
 class SavedPlace(db.Model):
-    """Place saved by the user."""
+    """Place saved by the specific user."""
 
     __tablename__ = "saved_places"
 

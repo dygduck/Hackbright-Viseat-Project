@@ -4,10 +4,10 @@
 
 {% block content %}
 <h1>It is easy to Viseat!</h1>
-<p>Hi {{ user.fname }}</p><br>
+<p>Hi {{ user.fname }}, would you like to make some trips?</p><br>
 <div>
 {% if trips_dict == {} %}
-    <p>Hey, you haven't plan any trips yet!</p>
+    <p>Hey, you haven't planned any trips yet!</p>
 {% else %}
     <ul>
         {% for arrival_date, trip in trips_dict.iteritems()|sort %}

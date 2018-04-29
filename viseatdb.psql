@@ -1,0 +1,569 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.12
+-- Dumped by pg_dump version 9.5.12
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: cities; Type: TABLE; Schema: public; Owner: vagrant
+--
+
+CREATE TABLE public.cities (
+    city_id integer NOT NULL,
+    city_name character varying(40) NOT NULL
+);
+
+
+ALTER TABLE public.cities OWNER TO vagrant;
+
+--
+-- Name: cities_city_id_seq; Type: SEQUENCE; Schema: public; Owner: vagrant
+--
+
+CREATE SEQUENCE public.cities_city_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.cities_city_id_seq OWNER TO vagrant;
+
+--
+-- Name: cities_city_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vagrant
+--
+
+ALTER SEQUENCE public.cities_city_id_seq OWNED BY public.cities.city_id;
+
+
+--
+-- Name: places; Type: TABLE; Schema: public; Owner: vagrant
+--
+
+CREATE TABLE public.places (
+    yelp_id character varying NOT NULL,
+    name character varying(40) NOT NULL,
+    place_url character varying(500) NOT NULL
+);
+
+
+ALTER TABLE public.places OWNER TO vagrant;
+
+--
+-- Name: saved_places; Type: TABLE; Schema: public; Owner: vagrant
+--
+
+CREATE TABLE public.saved_places (
+    saved_place_id integer NOT NULL,
+    yelp_id character varying,
+    trip_id integer,
+    meal_datetime timestamp without time zone NOT NULL,
+    meal_label character varying(40) NOT NULL
+);
+
+
+ALTER TABLE public.saved_places OWNER TO vagrant;
+
+--
+-- Name: saved_places_saved_place_id_seq; Type: SEQUENCE; Schema: public; Owner: vagrant
+--
+
+CREATE SEQUENCE public.saved_places_saved_place_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.saved_places_saved_place_id_seq OWNER TO vagrant;
+
+--
+-- Name: saved_places_saved_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vagrant
+--
+
+ALTER SEQUENCE public.saved_places_saved_place_id_seq OWNED BY public.saved_places.saved_place_id;
+
+
+--
+-- Name: trips; Type: TABLE; Schema: public; Owner: vagrant
+--
+
+CREATE TABLE public.trips (
+    trip_id integer NOT NULL,
+    user_id integer,
+    city_id integer,
+    arrival_date timestamp without time zone NOT NULL,
+    departure_date timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.trips OWNER TO vagrant;
+
+--
+-- Name: trips_trip_id_seq; Type: SEQUENCE; Schema: public; Owner: vagrant
+--
+
+CREATE SEQUENCE public.trips_trip_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.trips_trip_id_seq OWNER TO vagrant;
+
+--
+-- Name: trips_trip_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vagrant
+--
+
+ALTER SEQUENCE public.trips_trip_id_seq OWNED BY public.trips.trip_id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: vagrant
+--
+
+CREATE TABLE public.users (
+    user_id integer NOT NULL,
+    username character varying(30) NOT NULL,
+    fname character varying(30) NOT NULL,
+    lname character varying(30) NOT NULL,
+    email character varying(40) NOT NULL,
+    password character varying(20) NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO vagrant;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: vagrant
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_user_id_seq OWNER TO vagrant;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vagrant
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- Name: city_id; Type: DEFAULT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.cities ALTER COLUMN city_id SET DEFAULT nextval('public.cities_city_id_seq'::regclass);
+
+
+--
+-- Name: saved_place_id; Type: DEFAULT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.saved_places ALTER COLUMN saved_place_id SET DEFAULT nextval('public.saved_places_saved_place_id_seq'::regclass);
+
+
+--
+-- Name: trip_id; Type: DEFAULT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.trips ALTER COLUMN trip_id SET DEFAULT nextval('public.trips_trip_id_seq'::regclass);
+
+
+--
+-- Name: user_id; Type: DEFAULT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- Data for Name: cities; Type: TABLE DATA; Schema: public; Owner: vagrant
+--
+
+COPY public.cities (city_id, city_name) FROM stdin;
+1	Paris, France
+2	London, United Kingdom
+3	Barcelona, Spain
+4	Istanbul, Turkey
+5	Madrid, Spain
+6	Nice, France
+7	Berlin, Germany
+8	Hong Kong, Hong Kong
+9	Singapore, Singapore
+10	San Francisco, United States
+11	New York, United States
+12	Los Angeles, United States
+13	Chicago, United States
+\.
+
+
+--
+-- Name: cities_city_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vagrant
+--
+
+SELECT pg_catalog.setval('public.cities_city_id_seq', 13, true);
+
+
+--
+-- Data for Name: places; Type: TABLE DATA; Schema: public; Owner: vagrant
+--
+
+COPY public.places (yelp_id, name, place_url) FROM stdin;
+Z0r83lDOA1mI8RpNccXtHw	The Fat Bear	https://www.yelp.com/biz/the-fat-bear-london?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+7Pc6VXiWEqc4JbgrH4U3tA	Rocca	https://www.yelp.com/biz/rocca-london?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+K_dDxWgagylIvuB2oQy1KQ	The Black Penny	https://www.yelp.com/biz/the-black-penny-london?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+0B-ag3J18TatG9H9EQohGg	Hawksmoor Seven Dials	https://www.yelp.com/biz/hawksmoor-seven-dials-london-4?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+BjPq77aiaKZAVUHIu2S3gA	The English Rose Cafe and Tea Shop	https://www.yelp.com/biz/the-english-rose-cafe-and-tea-shop-london?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+5sEiM_Xw5jXbMhloNqSgYQ	Grumbles	https://www.yelp.com/biz/grumbles-london?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+cgkDnzaQvP9q-JHXd-ECcA	Cambridge Street Kitchen	https://www.yelp.com/biz/cambridge-street-kitchen-london?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+-ylzTrYtRJUJa2BuAInoyQ	Friends of Ours	https://www.yelp.com/biz/friends-of-ours-london?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+fM99pmX2-ipWvG33tILdZQ	Franzè & Evans	https://www.yelp.com/biz/franz%C3%A8-and-evans-london-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+5oLV6eWx4RLjgPlEKLczOQ	Little Bay West Hampstead	https://www.yelp.com/biz/little-bay-west-hampstead-london?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+lhsLzC6sfkEBtuQ323YdYw	Café Varenne	https://www.yelp.com/biz/caf%C3%A9-varenne-paris-4?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+-umFmobUgpW_05m_ud1vHw	La Cordonnerie	https://www.yelp.com/biz/la-cordonnerie-paris-5?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+ya9qZ-AeNav0H0EWZg7l7g	Baroche	https://www.yelp.com/biz/baroche-paris-3?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+vjJ5XviPtldKNqAevyoAug	Chez Mademoiselle	https://www.yelp.com/biz/chez-mademoiselle-paris-3?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+kYb2q4Li8Cw2PY_I9lCJOw	Chez Janou	https://www.yelp.com/biz/chez-janou-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+KBvc0C1wcbmafqcjAr0I4g	Le Grenier à Pain	https://www.yelp.com/biz/le-grenier-%C3%A0-pain-paris-8?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+xcC4XZCk2cSPxfHGKcGfPg	Chez Alain Miam Miam	https://www.yelp.com/biz/chez-alain-miam-miam-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+71aipxvzUEEAd245w61o7A	The Sushi Bar	https://www.yelp.com/biz/the-sushi-bar-singapore?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+oU3_206vSPP5H58CidKxWQ	On The Table	https://www.yelp.com/biz/on-the-table-singapore?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+zhbnY6oSmPmpkvsJRAwL9A	The Terrace at Sentosa	https://www.yelp.com/biz/the-terrace-at-sentosa-singapore?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+uG59lRC-9fwt64TCUHnuKA	Coastes	https://www.yelp.com/biz/coastes-singapore?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+rQpO1Eie_zmeAOQ9s-T0sQ	Hole in the Wall	https://www.yelp.com/biz/hole-in-the-wall-new-york-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+Sj3JYCbaEFrAqUzRrenQbg	Jora Restaurant & Bar	https://www.yelp.com/biz/jora-restaurant-and-bar-long-island-city?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+cCesIqo-LQt0cRlZAnrAZQ	Friedman's	https://www.yelp.com/biz/friedmans-new-york-59?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+56qlj1cYlqNzmG0xllGg-w	Westville Dumbo	https://www.yelp.com/biz/westville-dumbo-brooklyn?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+26E3j9l0XW_onVIUP-ThCw	Heidi's House By The Side Of The Road	https://www.yelp.com/biz/heidis-house-by-the-side-of-the-road-new-york-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+KJFosOrLotvQo_rntg0sjA	Bricolage	https://www.yelp.com/biz/bricolage-brooklyn?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+xTnivXEdEtXrnhp-z4JGvg	La Parisienne	https://www.yelp.com/biz/la-parisienne-new-york-5?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+obBh14Cy3hp0AbriMPefzg	Rider	https://www.yelp.com/biz/rider-brooklyn-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+WgueEVoymiaZJVIsRCk8_w	The Breakfast Shack	https://www.yelp.com/biz/the-breakfast-shack-astoria?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+MNNpsRXe7Wt5m3Jla9Wk0w	The Alcove	https://www.yelp.com/biz/the-alcove-sunnyside?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+DyPK6IyY-8xIqQWT4HqJNw	Gristmill	https://www.yelp.com/biz/gristmill-brooklyn?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+q11TljTQd33XCWlVoPyRqg	The Osprey	https://www.yelp.com/biz/the-osprey-brooklyn?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+UY7IzVYub6gr8HMS5_Dutg	Cafecito	https://www.yelp.com/biz/cafecito-chicago-5?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+xoi7Cw7FoknAx5p880RtWQ	Au Cheval	https://www.yelp.com/biz/au-cheval-chicago?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+0fYNLK7VpBUW4mgFyPCrWQ	Over Easy Cafe	https://www.yelp.com/biz/over-easy-cafe-chicago-3?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+a3DwTLYFIwLo0kESduHvhQ	Six06 Cafe Bar	https://www.yelp.com/biz/six06-cafe-bar-chicago?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+iOMvXQYFl6_mtw0wX6ZUXw	Forbidden Root	https://www.yelp.com/biz/forbidden-root-chicago?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+PPMAnBtLm9yrnO3lGCV9uA	Sociale Chicago	https://www.yelp.com/biz/sociale-chicago-chicago?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+5u27W_xHIKhVbws08lXXJg	Bryn Mawr Breakfast Club	https://www.yelp.com/biz/bryn-mawr-breakfast-club-chicago-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+LsfXd9c4mVl7q9g1uGwD1A	minigrow	https://www.yelp.com/biz/minigrow-chicago-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+LaYrGWnZazWsc3xi1sTYfw	Arbella	https://www.yelp.com/biz/arbella-chicago?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+FNXQQX_Tz9fGtLI3t-1sFQ	Mortar & Pestle	https://www.yelp.com/biz/mortar-and-pestle-chicago?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+uEeWn6sPq-giWvfE9uhQ7A	Dottie's True Blue Cafe	https://www.yelp.com/biz/dotties-true-blue-cafe-san-francisco?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+XhJ6ZYagcWNHpJ1H1KvNlQ	a Mano	https://www.yelp.com/biz/a-mano-san-francisco-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+4-ra3RxOy1PpvnaK49dy8w	Eight AM	https://www.yelp.com/biz/eight-am-san-francisco?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+MvAo0hj9FXOeNL5PwBZ0fQ	Mama's On Washington Square	https://www.yelp.com/biz/mamas-on-washington-square-san-francisco?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+DL-2iaugPoULjvZ6pyNRAQ	Causwells	https://www.yelp.com/biz/causwells-san-francisco-5?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+uGXE3PweOJvLVpvBCGthVA	Kau Kee Restaurant	https://www.yelp.com/biz/%E4%B9%9D%E8%A8%98%E7%89%9B%E8%85%A9-%E9%A6%99%E6%B8%AF?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+YnpmRqrXwcazNeO5YQiixw	Butao Ramen	https://www.yelp.com/biz/%E8%B1%9A%E7%8E%8B-%E9%A6%99%E6%B8%AF?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+-UNekVpwYzYTkB7kJehOGQ	Opendoor Cafe + Courtyard	https://www.yelp.com/biz/opendoor-cafe-courtyard-%E9%A6%99%E6%B8%AF?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+Xp7VdeNq9i_s7wLdf77HZw	Corner Kitchen Cafe	https://www.yelp.com/biz/corner-kitchen-cafe-%E9%A6%99%E6%B8%AF?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+TZohxMJYGZnG0RTe9-b0HA	Posto Pubblico	https://www.yelp.com/biz/posto-pubblico-%E9%A6%99%E6%B8%AF?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+g2zDeOraI0CCL6-AvcCxCQ	Le Petit Vendôme	https://www.yelp.com/biz/le-petit-vend%C3%B4me-paris-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+UdyUNz28MNot1SfTQjdE7A	Les Petites Bouchées	https://www.yelp.com/biz/les-petites-bouch%C3%A9es-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+xCkh4Sc0Ih6YAf4hEcrqQA	Le Comptoir	https://www.yelp.com/biz/le-comptoir-paris-12?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+N3zQ7Y52QXRnfQy_Gri3yw	Claus - La Table du Petit-Déjeuner	https://www.yelp.com/biz/claus-la-table-du-petit-d%C3%A9jeuner-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+DO155A3zQ1eNMo4-XasTnw	Le Centre du Monde	https://www.yelp.com/biz/le-centre-du-monde-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+Z1KydtcnVViFSBHsqQEndA	Les Pieds sous la Table	https://www.yelp.com/biz/les-pieds-sous-la-table-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+mZ_qtnaQsVrsRcm1CMGAWA	Le Marquis	https://www.yelp.com/biz/le-marquis-paris-6?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+jMnAw-sAExnuyWqzTD4YlQ	L'Ardoise Gourmande	https://www.yelp.com/biz/l-ardoise-gourmande-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+ijqSzadlZ9SCXvUEpMimcA	Angelina	https://www.yelp.com/biz/angelina-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+lBVFH1OHJYyjtrufC4OzZg	La Crêperie de Josselin	https://www.yelp.com/biz/la-cr%C3%AAperie-de-josselin-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+MfmIKDTvTNfpdID38qWVag	Le Porte Pot	https://www.yelp.com/biz/le-porte-pot-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+SkZWjUwmNgcCJJQvgJT1DQ	La Jacobine	https://www.yelp.com/biz/la-jacobine-paris?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+469FqV5AoIulkDeJu-iZoQ	Vogue	https://www.yelp.com/biz/vogue-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+9ATM7mr2rY5qIjwiLkeHTA	Ulus 29	https://www.yelp.com/biz/ulus-29-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+by80hcec3WfzcG-k0N9lAA	Eleos Restaurant	https://www.yelp.com/biz/eleos-restaurant-istanbul-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+vG_eZDYcPi4rNxCPAVdWFA	Marmelat	https://www.yelp.com/biz/marmelat-istanbul-3?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+d9v0Bx7TKrtSSVAf5ahguA	Kahve 6	https://www.yelp.com/biz/kahve-6-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+Gc4Mucr3J0WLL858e4Rh4A	Ist-Too	https://www.yelp.com/biz/ist-too-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+dkFQjQykUG4M_2LtrkfhzA	Karaköy Özsüt 	https://www.yelp.com/biz/karak%C3%B6y-%C3%B6zs%C3%BCt-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+Dueajk3lqzF0_f7Q3BJW5A	Galata Evi	https://www.yelp.com/biz/galata-evi-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+okHlfBbaT_sDFmbce-MFOQ	Köşk Cafe & Restaurant	https://www.yelp.com/biz/k%C3%B6%C5%9Fk-cafe-ve-restaurant-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+BJquZlb1HBHPecl-JB03wA	Tarihi Sultanahmet Köftecisi Selim Usta	https://www.yelp.com/biz/tarihi-sultanahmet-k%C3%B6ftecisi-selim-usta-istanbul-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+7tGBinueUoD5vjump1rVaQ	Ziya Baba	https://www.yelp.com/biz/ziya-baba-istanbul-2?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+alMKgn2DOtz3-8RXKaXxzQ	Çeşme Bazlama Kahvaltı	https://www.yelp.com/biz/%C3%A7e%C5%9Fme-bazlama-kahvalt%C4%B1-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+5ZD3WRZ_Css1WrAh9OEt-g	Açık Mutfak	https://www.yelp.com/biz/a%C3%A7%C4%B1k-mutfak-istanbul?adjust_creative=xRkF2ozLJzv0Tl0J-wOpZQ&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=xRkF2ozLJzv0Tl0J-wOpZQ
+\.
+
+
+--
+-- Data for Name: saved_places; Type: TABLE DATA; Schema: public; Owner: vagrant
+--
+
+COPY public.saved_places (saved_place_id, yelp_id, trip_id, meal_datetime, meal_label) FROM stdin;
+1	Z0r83lDOA1mI8RpNccXtHw	1	2018-03-07 00:00:00	lunch
+2	7Pc6VXiWEqc4JbgrH4U3tA	1	2018-03-07 00:00:00	dinner
+3	K_dDxWgagylIvuB2oQy1KQ	1	2018-03-09 00:00:00	lunch
+4	0B-ag3J18TatG9H9EQohGg	1	2018-03-09 00:00:00	dinner
+5	BjPq77aiaKZAVUHIu2S3gA	1	2018-03-10 00:00:00	breakfast
+6	5sEiM_Xw5jXbMhloNqSgYQ	1	2018-03-10 00:00:00	dinner
+7	cgkDnzaQvP9q-JHXd-ECcA	1	2018-03-11 00:00:00	dinner
+8	-ylzTrYtRJUJa2BuAInoyQ	1	2018-03-13 00:00:00	breakfast
+9	fM99pmX2-ipWvG33tILdZQ	1	2018-03-13 00:00:00	lunch
+10	5oLV6eWx4RLjgPlEKLczOQ	1	2018-03-13 00:00:00	dinner
+11	lhsLzC6sfkEBtuQ323YdYw	2	2018-01-18 00:00:00	lunch
+12	-umFmobUgpW_05m_ud1vHw	2	2018-01-18 00:00:00	dinner
+13	ya9qZ-AeNav0H0EWZg7l7g	2	2018-01-19 00:00:00	lunch
+14	vjJ5XviPtldKNqAevyoAug	2	2018-01-19 00:00:00	dinner
+15	kYb2q4Li8Cw2PY_I9lCJOw	2	2018-01-20 00:00:00	lunch
+16	KBvc0C1wcbmafqcjAr0I4g	2	2018-01-21 00:00:00	breakfast
+17	xcC4XZCk2cSPxfHGKcGfPg	2	2018-01-21 00:00:00	lunch
+18	71aipxvzUEEAd245w61o7A	3	2018-02-09 00:00:00	dinner
+19	oU3_206vSPP5H58CidKxWQ	3	2018-02-10 00:00:00	lunch
+20	zhbnY6oSmPmpkvsJRAwL9A	3	2018-02-10 00:00:00	dinner
+21	uG59lRC-9fwt64TCUHnuKA	3	2018-02-11 00:00:00	lunch
+22	rQpO1Eie_zmeAOQ9s-T0sQ	4	2018-04-07 00:00:00	breakfast
+23	Sj3JYCbaEFrAqUzRrenQbg	4	2018-04-08 00:00:00	dinner
+24	cCesIqo-LQt0cRlZAnrAZQ	4	2018-04-09 00:00:00	breakfast
+25	56qlj1cYlqNzmG0xllGg-w	4	2018-04-09 00:00:00	lunch
+26	26E3j9l0XW_onVIUP-ThCw	4	2018-04-09 00:00:00	dinner
+27	KJFosOrLotvQo_rntg0sjA	4	2018-04-10 00:00:00	dinner
+28	xTnivXEdEtXrnhp-z4JGvg	4	2018-04-11 00:00:00	breakfast
+29	obBh14Cy3hp0AbriMPefzg	4	2018-04-11 00:00:00	dinner
+30	WgueEVoymiaZJVIsRCk8_w	4	2018-04-12 00:00:00	breakfast
+31	MNNpsRXe7Wt5m3Jla9Wk0w	4	2018-04-12 00:00:00	lunch
+32	DyPK6IyY-8xIqQWT4HqJNw	4	2018-04-12 00:00:00	dinner
+33	q11TljTQd33XCWlVoPyRqg	4	2018-04-13 00:00:00	lunch
+34	UY7IzVYub6gr8HMS5_Dutg	5	2018-01-18 00:00:00	lunch
+35	xoi7Cw7FoknAx5p880RtWQ	5	2018-01-18 00:00:00	dinner
+36	0fYNLK7VpBUW4mgFyPCrWQ	5	2018-01-20 00:00:00	breakfast
+37	a3DwTLYFIwLo0kESduHvhQ	5	2018-01-21 00:00:00	lunch
+38	iOMvXQYFl6_mtw0wX6ZUXw	5	2018-01-21 00:00:00	dinner
+39	PPMAnBtLm9yrnO3lGCV9uA	5	2018-01-22 00:00:00	dinner
+40	5u27W_xHIKhVbws08lXXJg	5	2018-01-23 00:00:00	breakfast
+41	LsfXd9c4mVl7q9g1uGwD1A	5	2018-01-23 00:00:00	lunch
+42	LaYrGWnZazWsc3xi1sTYfw	5	2018-01-23 00:00:00	dinner
+43	FNXQQX_Tz9fGtLI3t-1sFQ	5	2018-01-25 00:00:00	lunch
+44	uEeWn6sPq-giWvfE9uhQ7A	6	2018-03-23 00:00:00	breakfast
+45	XhJ6ZYagcWNHpJ1H1KvNlQ	6	2018-03-23 00:00:00	dinner
+46	4-ra3RxOy1PpvnaK49dy8w	6	2018-03-24 00:00:00	breakfast
+47	MvAo0hj9FXOeNL5PwBZ0fQ	6	2018-03-25 00:00:00	breakfast
+48	DL-2iaugPoULjvZ6pyNRAQ	6	2018-03-25 00:00:00	dinner
+49	uGXE3PweOJvLVpvBCGthVA	7	2018-04-07 00:00:00	lunch
+50	YnpmRqrXwcazNeO5YQiixw	7	2018-04-07 00:00:00	dinner
+51	-UNekVpwYzYTkB7kJehOGQ	7	2018-04-08 00:00:00	breakfast
+52	Xp7VdeNq9i_s7wLdf77HZw	7	2018-04-08 00:00:00	lunch
+53	TZohxMJYGZnG0RTe9-b0HA	7	2018-04-08 00:00:00	dinner
+54	g2zDeOraI0CCL6-AvcCxCQ	8	2018-02-08 00:00:00	dinner
+55	UdyUNz28MNot1SfTQjdE7A	8	2018-02-09 00:00:00	lunch
+56	xCkh4Sc0Ih6YAf4hEcrqQA	8	2018-02-09 00:00:00	dinner
+57	N3zQ7Y52QXRnfQy_Gri3yw	8	2018-02-11 00:00:00	breakfast
+58	DO155A3zQ1eNMo4-XasTnw	8	2018-02-11 00:00:00	lunch
+59	Z1KydtcnVViFSBHsqQEndA	8	2018-02-11 00:00:00	dinner
+60	mZ_qtnaQsVrsRcm1CMGAWA	8	2018-02-12 00:00:00	lunch
+61	jMnAw-sAExnuyWqzTD4YlQ	8	2018-02-13 00:00:00	dinner
+62	ijqSzadlZ9SCXvUEpMimcA	8	2018-02-16 00:00:00	breakfast
+63	lBVFH1OHJYyjtrufC4OzZg	8	2018-02-16 00:00:00	lunch
+64	MfmIKDTvTNfpdID38qWVag	8	2018-02-16 00:00:00	dinner
+65	SkZWjUwmNgcCJJQvgJT1DQ	8	2018-02-17 00:00:00	lunch
+66	469FqV5AoIulkDeJu-iZoQ	9	2018-04-21 00:00:00	lunch
+67	9ATM7mr2rY5qIjwiLkeHTA	9	2018-04-21 00:00:00	dinner
+68	by80hcec3WfzcG-k0N9lAA	9	2018-04-22 00:00:00	dinner
+69	vG_eZDYcPi4rNxCPAVdWFA	9	2018-04-25 00:00:00	breakfast
+70	d9v0Bx7TKrtSSVAf5ahguA	9	2018-04-26 00:00:00	breakfast
+71	Gc4Mucr3J0WLL858e4Rh4A	9	2018-04-26 00:00:00	dinner
+72	dkFQjQykUG4M_2LtrkfhzA	9	2018-04-27 00:00:00	breakfast
+73	Dueajk3lqzF0_f7Q3BJW5A	9	2018-04-27 00:00:00	dinner
+74	okHlfBbaT_sDFmbce-MFOQ	9	2018-04-28 00:00:00	breakfast
+75	BJquZlb1HBHPecl-JB03wA	9	2018-04-28 00:00:00	dinner
+76	7tGBinueUoD5vjump1rVaQ	9	2018-04-29 00:00:00	breakfast
+77	alMKgn2DOtz3-8RXKaXxzQ	9	2018-04-30 00:00:00	breakfast
+78	5ZD3WRZ_Css1WrAh9OEt-g	9	2018-04-30 00:00:00	lunch
+\.
+
+
+--
+-- Name: saved_places_saved_place_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vagrant
+--
+
+SELECT pg_catalog.setval('public.saved_places_saved_place_id_seq', 78, true);
+
+
+--
+-- Data for Name: trips; Type: TABLE DATA; Schema: public; Owner: vagrant
+--
+
+COPY public.trips (trip_id, user_id, city_id, arrival_date, departure_date) FROM stdin;
+1	1	2	2018-03-07 12:00:00	2018-03-13 23:00:00
+2	1	1	2018-01-18 13:00:00	2018-01-21 15:05:00
+3	1	9	2018-02-09 12:00:00	2018-02-11 18:00:00
+4	1	11	2018-04-05 22:00:00	2018-04-14 06:00:00
+5	2	13	2018-01-18 12:00:00	2018-01-25 12:00:00
+6	2	10	2018-03-23 09:00:00	2018-03-26 19:00:00
+7	2	8	2018-04-06 20:00:00	2018-04-08 23:00:00
+8	4	1	2018-02-08 14:00:00	2018-02-17 20:00:00
+9	4	4	2018-04-20 09:00:00	2018-04-30 12:00:00
+\.
+
+
+--
+-- Name: trips_trip_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vagrant
+--
+
+SELECT pg_catalog.setval('public.trips_trip_id_seq', 9, true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: vagrant
+--
+
+COPY public.users (user_id, username, fname, lname, email, password) FROM stdin;
+1	dygduck	Duygu	Ebcim	duygu@gmail.com	duckface
+2	unicorn	Heather	Mahan	heather@gmail.com	heatherm
+3	murti	Murat	Ozgul	murat@yahoo.com	murato
+4	lyon	Romain	Komorn	romain@gmail.com	romaink
+\.
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: vagrant
+--
+
+SELECT pg_catalog.setval('public.users_user_id_seq', 4, true);
+
+
+--
+-- Name: cities_pkey; Type: CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.cities
+    ADD CONSTRAINT cities_pkey PRIMARY KEY (city_id);
+
+
+--
+-- Name: places_pkey; Type: CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.places
+    ADD CONSTRAINT places_pkey PRIMARY KEY (yelp_id);
+
+
+--
+-- Name: saved_places_pkey; Type: CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.saved_places
+    ADD CONSTRAINT saved_places_pkey PRIMARY KEY (saved_place_id);
+
+
+--
+-- Name: trips_pkey; Type: CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.trips
+    ADD CONSTRAINT trips_pkey PRIMARY KEY (trip_id);
+
+
+--
+-- Name: users_email_key; Type: CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: users_username_key; Type: CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- Name: saved_places_trip_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.saved_places
+    ADD CONSTRAINT saved_places_trip_id_fkey FOREIGN KEY (trip_id) REFERENCES public.trips(trip_id);
+
+
+--
+-- Name: saved_places_yelp_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.saved_places
+    ADD CONSTRAINT saved_places_yelp_id_fkey FOREIGN KEY (yelp_id) REFERENCES public.places(yelp_id);
+
+
+--
+-- Name: trips_city_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.trips
+    ADD CONSTRAINT trips_city_id_fkey FOREIGN KEY (city_id) REFERENCES public.cities(city_id);
+
+
+--
+-- Name: trips_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: vagrant
+--
+
+ALTER TABLE ONLY public.trips
+    ADD CONSTRAINT trips_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

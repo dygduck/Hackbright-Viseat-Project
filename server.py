@@ -45,7 +45,7 @@ def login_process():
         return redirect("/")
 
     if user.password != password:
-        flash("Incorrect password")
+        flash("Check your login entries.")
         return redirect("/")
 
     session["user_id"] = user.user_id
@@ -53,7 +53,6 @@ def login_process():
     return redirect("/users/{}".format(user.user_id))
 
 @app.route('/users/<int:user_id>')
-
 def show_personal_page(user_id):
     """Show User's personal page."""
 
@@ -78,8 +77,8 @@ def show_personal_page(user_id):
                 trip_info["dates"][date] = meals
             trips_dict[trip.arrival_date.date()] = trip_info
 
-        import pprint
-        pprint.pprint(trips_dict)
+        # import pprint
+        # pprint.pprint(trips_dict)
 
 
         return render_template("user_page.html", user=user, cities=cities,
@@ -104,7 +103,7 @@ def search_user():
     user = User.query.filter_by(username=username).first()
     print user
     if not user:
-        flash("oops! username doesn't exists.")
+        flash("oops! username doesn't exist.")
         return redirect("/")
     else:
         return redirect("/users/{}".format(user.username))
@@ -114,8 +113,23 @@ def show_user(username):
     """Show a user info page."""
 
     user = User.query.filter_by(username=username).first()
+    trips = Trip.query.filter(Trip.user == user).all()
 
-    return render_template("user_info.html", user=user)
+    trips_dict = {}
+    for trip in trips:
+        trip_info = {
+            "city_name": trip.city.city_name,
+            "departure_date": trip.departure_date.date(),
+            "dates": {}
+        }
+        for place in trip.saved_places:
+            date = place.meal_datetime.date()
+            meals = trip_info["dates"].get(date, {})
+            meals[place.meal_label] = {"name": place.place.name, "url": place.place.place_url}
+            trip_info["dates"][date] = meals
+        trips_dict[trip.arrival_date.date()] = trip_info
+
+    return render_template("user_info.html", user=user, trips_dict=trips_dict)
 
 
 @app.route('/register', methods=['GET'])
@@ -151,14 +165,11 @@ def register_process():
         flash("User {} added.".format(email))
         return redirect("/users/{}".format(user.user_id))
 
-    elif existing_user_with_given_username:
+    elif existing_user_with_given_username or existing_user_with_given_email:
         # if the entered email is not in the system but the username is in the system
-        flash("Please pick a different user name.")
+        flash("Username or email already existing, please try another one, or login.")
         return redirect("/register")
 
-    else:
-        flash("email and username already existing, login.")
-        return redirect("/")
 
 
 @app.route("/places")
@@ -170,8 +181,6 @@ def handle_entry():
         return redirect("/")
     user_id = session["user_id"]
 
-    # We are getting the name of the City, arrival date and departure date from user.
-    # name = "Paris,75000,France"
 
     city_id = request.args["city_id"]
     city_name = City.query.get(city_id).city_name
@@ -186,11 +195,6 @@ def handle_entry():
     departure_date = datetime.strptime(request.args["departure_date"], f)
     delta = departure_date - arrival_date
 
-    # days_to_eat = {"2018-04-13":{"dinner":"restaurant_name_1"},
-    #                "2018-04-14":{"breakfast":"restaurant_name_2", "lunch":"restaurant_name_3", "dinner":"restaurant_name_4"}
-    #                "2018-04-15":{"breakfast":"restaurant_name_5", "lunch":"restaurant_name_6", "dinner":"restaurant_name_7"}
-    #                "2018-04-16":{"breakfast":"restaurant_name_8"}
-    #               }
 
     days_to_eat = {}
 
@@ -202,17 +206,6 @@ def handle_entry():
     elif departure_date == arrival_date:
         flash("Sorry, you don't have enough time to eat this time.")
         return redirect("/users/{}".format(user.user_id))
-
-    # if arrival_date.day == departure_date.day:
-
-    #     if arrival_date.time() <= datetime.time(11, 0):
-    #         # add 1 breakfast to the days_to_eat lists arrival_date dictionary
-
-    #     if arrival_date.time() <= datetime.time(15, 0):
-    #         # add 1 lunch to the days_to_eat lists arrival_date dictionary
-
-    #     if arrival_date.time() <= datetime.time(22, 0):
-    #         # add 1 dinner to the days_to_eat list arrival_date dictionary
 
 
     # find the num of days between these two dates
@@ -386,7 +379,7 @@ def query_api(city_name, meal, num_of_meals, num_of_offsets):
         businesses = []
 
     # print meal
-    # print businesses
+    print businesses
     # print "number of businesses"
     # print len(businesses)
     return businesses
@@ -402,13 +395,6 @@ def save_places():
     city_id = request.form["city_id"]
     arrival_date = request.form["arrival_date"]
     departure_date = request.form["departure_date"]
-
-    # import pdb; pdb.set_trace()
-    print "HERE I AM PRINTING MY BELOVED PLACES YAY"
-    print saved_businesses
-    print city_id
-    print arrival_date
-    print departure_date
 
 
     trip = Trip(user_id=user_id, city_id=city_id, arrival_date=arrival_date,
