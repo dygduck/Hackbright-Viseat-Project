@@ -117,7 +117,7 @@ class SavedPlace(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Recommended_Place trip_id={} name={} meal_label={}>".format(self.trip_id, self.name, self.meal_label)
+        return "<Recommended_Place trip_id={} meal_label={}>".format(self.trip_id, self.meal_label)
 
 
 

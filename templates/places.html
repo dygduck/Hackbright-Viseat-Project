@@ -15,16 +15,18 @@
     <input type="checkbox" name="saved_businesses" value="{{business.id}}">{{business.meal}}:<a href="{{ business.url }}">{{ business.name }}</a><br>
     <input type="hidden" name="{{business.id+'__label'}}" value="{{business.meal}}">
     <input type="hidden" name="{{business.id+'__date'}}" value="{{date}}">
-    <input type="hidden" name="{{business.id+'__name'}}" value="{{business.name}}">
+    <input class="place-name" type="hidden" name="{{business.id+'__name'}}" value="{{business.name}}">
     <input type="hidden" name="{{business.id+'__url'}}" value="{{business.url}}">
-
+    <input class="place-latitude" type="hidden" name="{{business.id+'__latitude'}}" value="{{business.coordinates.latitude}}">
+    <input class="place-longitude" type="hidden" name="{{business.id+'__longitude'}}" value="{{business.coordinates.longitude}}">
     {% endfor %}
 {% endfor %}
 <div>
     <button type="submit">Save</button>
 </div>
 </form>
-
-
 </ul>
+<div id="map" style="height: 400px; width: 500px;">
+</div>
+<script src="../static/js/map.js"></script>
 {% endblock %}

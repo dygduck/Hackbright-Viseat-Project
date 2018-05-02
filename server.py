@@ -66,6 +66,7 @@ def show_personal_page(user_id):
         trips_dict = {}
         for trip in trips:
             trip_info = {
+                "trip_id":trip.trip_id,
                 "city_name": trip.city.city_name,
                 "departure_date": trip.departure_date.date(),
                 "dates": {}
@@ -73,7 +74,7 @@ def show_personal_page(user_id):
             for place in trip.saved_places:
                 date = place.meal_datetime.date()
                 meals = trip_info["dates"].get(date, {})
-                meals[place.meal_label] = {"name": place.place.name, "url": place.place.place_url}
+                meals[place.meal_label] = {"name": place.place.name, "url": place.place.place_url, "saved_place_id":place.saved_place_id}
                 trip_info["dates"][date] = meals
             trips_dict[trip.arrival_date.date()] = trip_info
 
@@ -427,6 +428,53 @@ def save_places():
     session["user_id"] = user.user_id
 
     return redirect("/users/{}".format(user.user_id))
+
+
+@app.route("/delete_places", methods=["POST"])
+def delete_places():
+    """delete the places checked by the user."""
+    user_id = session["user_id"]
+    user = User.query.get(user_id)
+
+    # delete places first and then delete trips , so there will be no error
+    # possibility.
+
+    saved_places = request.form.getlist("saved_place")
+    # print saved_places
+    for place_id in saved_places:
+        saved_place = SavedPlace.query.get(int(place_id))
+        db.session.delete(saved_place)
+
+
+    dates = request.form.getlist("date")
+    for date in dates:
+        trip_id, meal_datetime = date.split(":")
+        trip_id = int(trip_id)
+        saved_places_to_delete = SavedPlace.query.filter(SavedPlace.trip_id == trip_id, SavedPlace.meal_datetime == meal_datetime).all()
+        for place in saved_places_to_delete:
+            db.session.delete(place)
+
+
+    trips = request.form.getlist("trip")
+    # print "PRINTING TRIPS: {}".format(trips)
+    for trip_id in trips:
+        trip = Trip.query.get(int(trip_id))
+        # print("Deleting trip first loop: {}".format(trip))
+        db.session.delete(trip)
+
+
+    trips = Trip.query.filter(Trip.user == user).all()
+    # print trips
+    for trip in trips:
+        if trip.saved_places == []:
+            # print("Deleting trip second loop: {}".format(trip))
+            db.session.delete(trip)
+
+    
+    db.session.commit()
+
+    return "delete completed"
+
 
 
 

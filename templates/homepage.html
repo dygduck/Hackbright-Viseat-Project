@@ -4,6 +4,12 @@
 
 {% block content %}
 <h1>Hello! It is easy to Viseat! It is easy to search and save places!</h1>
+<p>Viseat is the right place where you can easily look for places to eat during
+  your stay in many cities around the world. You can search for them, see their 
+  location, reach their information and save which suits your appetite! Next time you go to the same city, 
+  you may want to remember them! You get inspired by your trips! 
+  Even you get inspired by others' trips! 
+  If you didn't try yet, click on register! Et voila!</p>
 <form method="POST" action="/login">
   <div>
     <label>Email:
@@ -24,7 +30,7 @@
 
 <form method="GET" action="/register">
   <div>
-    <label>If you are not a user, please register.<br>
+    <label>If you are not a user yet, it is easy to register.<br>
       <input type="submit" value="Register">
     </label>
   </div>
@@ -32,7 +38,7 @@
 
 <form method="GET" action="/search_user">
   <div>
-    <label>Search for a user.<br>
+    <label>Hey, would you like to see where did other users go?<br>
       <input type="text" name="username" required>
     </label>
     <input type="submit" value="Search">

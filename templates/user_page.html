@@ -9,28 +9,32 @@
 {% if trips_dict == {} %}
     <p>Hey, you haven't planned any trips yet!</p>
 {% else %}
+<form  id="user-all-trips" method="POST" action="/delete_places">
     <ul>
         {% for arrival_date, trip in trips_dict.iteritems()|sort %}
-        <li>{{ arrival_date }} - {{ trip.departure_date }} - {{ trip.city_name }}</li>
+        <li><input class='trip-checkbox' type='checkbox' name='trip' value="{{ trip.trip_id }}">{{ arrival_date }} - {{ trip.departure_date }} - {{ trip.city_name }}
         <ul>
             {% for date, meals in trip.dates.iteritems()|sort %}
-            <li>{{ date }}
+            <li><input class='date-checkbox' type='checkbox' name='date' value='{{trip.trip_id}}:{{date}}'>{{ date }}
                 <ul>
                     {% if "breakfast" in meals %}
-                        <li>breakfast:<a href="{{ meals.breakfast.url }}"> {{ meals.breakfast.name }}</a></li>
+                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.breakfast.saved_place_id}}'>breakfast:<a href="{{ meals.breakfast.url }}"> {{ meals.breakfast.name }}</a></li>
                     {% endif %}
                     {% if "lunch" in meals %}
-                        <li>lunch:<a href="{{ meals.lunch.url }}"> {{ meals.lunch.name }}</a></li>
+                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.lunch.saved_place_id}}'>lunch:<a href="{{ meals.lunch.url }}"> {{ meals.lunch.name }}</a></li>
                     {% endif %}
                     {% if "dinner" in meals %}
-                        <li>dinner:<a href="{{ meals.dinner.url }}"> {{ meals.dinner.name }}</a></li>
+                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.dinner.saved_place_id}}'>dinner:<a href="{{ meals.dinner.url }}"> {{ meals.dinner.name }}</a></li>
                     {% endif %}
                 </ul>
             </li>
             {% endfor %}
         </ul>
         {% endfor %}
+    </li>
     </ul>
+        <input type="submit" value="Delete">
+</form>
 {% endif %}
 </div>
 
@@ -56,6 +60,8 @@
 <form action="/logout" method="GET">
       <input type="submit" value="Logout">
 </form>
+
+<script src="../static/js/delete_places.js"></script>
 
 {% endblock %}
 
