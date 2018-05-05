@@ -5,7 +5,7 @@ import os
 import requests
 from collections import OrderedDict
 from flask import Flask, render_template, redirect, flash, session, request
-# from flask_debugtoolbar import DebugToolbarExtension
+from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db, User, City, Trip, Place, SavedPlace
 from datetime import datetime, timedelta
@@ -30,6 +30,11 @@ def show_homepage():
 
     return render_template("homepage.html")
 
+@app.route('/about')
+def show_about():
+    """Show about page."""
+
+    return render_template("about.html")
 
 
 @app.route("/login", methods=["POST"])
@@ -105,7 +110,8 @@ def search_user():
     print user
     if not user:
         flash("oops! username doesn't exist.")
-        return redirect("/")
+        # return render_template("/")
+        return redirect(request.referrer)
     else:
         return redirect("/users/{}".format(user.username))
 
@@ -500,5 +506,8 @@ def delete_places():
 if __name__ == '__main__':
     # Setting debug=True gives us error messages in the browser and also
     # "reloads" our web app if we change the code.
+    app.debug = True
+    DebugToolbarExtension(app)
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     connect_to_db(app)
     app.run(debug=True, host="0.0.0.0")

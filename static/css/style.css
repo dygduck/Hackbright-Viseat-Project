@@ -1,0 +1,71 @@
+/* Hompage */
+
+/* Alert Messages */
+
+.alert {
+    margin-top: 10px;
+    margin-left: 400px;
+    width: 300px;
+    height: 20;
+}
+
+#alert-message {
+    width: 300px;
+    height: 20px;
+}
+
+.navbar {
+    margin-bottom: 10px;
+}
+
+/*.main-images {
+    margin-bottom: 20px;
+}*/
+
+/* Features Row */
+
+.feature {
+    text-align: center;
+}
+
+#featurerow {
+    margin-top: 10px;
+}
+
+.homepage-header1 {
+    margin-left: 130px;
+    width: 300px;
+}
+.homepage-header2 {
+    margin-left: 79px;
+    margin-top: 10px;
+    width: 500px;
+}
+
+.search-box {
+    width: 206px;
+}
+
+/*ABOUT PAGE*/
+
+#about-image {
+    width: 600px;
+    height: auto;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

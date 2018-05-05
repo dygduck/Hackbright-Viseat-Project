@@ -26,6 +26,8 @@ function updateTripList() {
             item.remove();
         }
     }
+    
+    // $("#delete-button").css("visibility", "hidden");
 }
 
 function deletePlaces(evt) {
