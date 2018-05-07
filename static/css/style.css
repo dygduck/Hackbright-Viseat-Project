@@ -1,7 +1,99 @@
+
+
+body {
+    background-color: #E1E4E9;
+}
+
+p, label {
+    color: #1E2032;
+    font-size: 14px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #B2362C;
+}
+
+ul, li {
+    list-style-type: none;
+}
+
+.btn-default {
+    color: #E1E4E9;
+    background-color: #1E2032; 
+}
+
+#btn-nav {
+    color: #1E2032;
+    background-color: #E1E4E9; 
+}
+
+/*Carousel*/
+.carousel{
+    background: #2f4357;
+    margin-top: 10px;
+}
+.carousel .item{
+    min-height: 280px; /* Prevent carousel from being distorted if for some reason image doesn't load */
+}
+.carousel .item img{
+    margin: 0 auto; /* Align slide image horizontally center */
+}
+.bs-example{
+  margin: 10px;
+}
+
+.carousel-caption > h3 {
+    color: #fcf8e3;
+}
+
+.carousel-caption > p {
+    color: #fcf8e3;
+}
+
 /* Hompage */
 
-/* Alert Messages */
+/*NAVBAR*/
 
+.navbar-default .navbar-brand {
+    color: #B2362C;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #C3CDD6;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #C3CDD6;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #C3CDD6;
+}
+
+.navbar {
+    margin-bottom: 10px;
+    background-color: #1E2032;
+
+    color: #fff;
+}
+
+.navbar-default .navbar-nav>li>a:focus{
+    color: #e1e4e9;
+} 
+.navbar-default .navbar-nav>li>a:hover{
+    color: #e1e4e9;
+}
+
+.navbar-default .navbar-brand:focus {
+    color: #b2362c9c;
+
+}
+.navbar-default .navbar-brand:hover {
+    color: #b2362c9c;
+
+}
+
+/* Alert Messages */
 .alert {
     margin-top: 10px;
     margin-left: 400px;
@@ -14,32 +106,59 @@
     height: 20px;
 }
 
-.navbar {
-    margin-bottom: 10px;
+#homepage-header1 {
+    width:400px;
+    height: 26px;
+    margin-left: 100px;
 }
 
-/*.main-images {
-    margin-bottom: 20px;
-}*/
+#homepage-header2 {
+    width:450px;
+    height: 26px;
+    margin-left: 50px;
+
+}
 
 /* Features Row */
 
-.feature {
+/*.feature {
     text-align: center;
-}
+}*/
 
 #featurerow {
     margin-top: 10px;
 }
 
-.homepage-header1 {
-    margin-left: 130px;
-    width: 300px;
+#homepage-header1 {
+    margin-left: 170px;
+    width: 400px;
 }
-.homepage-header2 {
-    margin-left: 79px;
+#homepage-header2 {
+    margin-left: 125px;
     margin-top: 10px;
-    width: 500px;
+    width: 450px;
+}
+
+.hp-feature-name {
+    margin-left: 140px;
+
+}
+.hp-login {
+    margin-left: 100px;
+}
+
+.hp-form-btn {
+    margin-left: 150px;
+}
+
+#hp-form-btn-rgstr {
+    margin-left: 160px;
+    margin-top: 10px;
+}
+
+.hp-form-control {
+    width: 200px;
+    margin-left: 100px;
 }
 
 .search-box {
@@ -54,10 +173,79 @@
 
 }
 
+/*REGISTER PAGE*/
+
+.register-form {
+    width: 250px;
+}
+
+/*USER PAGE*/
+
+.user-page-p {
+    font-size: 16px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+input[type=checkbox] {
+   margin-right: 5px; 
+}
 
 
+.trip-text {
+    line-height: 2.5;
+    color: #b2412c;
+    font-size: 15px;
+    font-weight: bold;
+    
+}
+
+.date-text {
+    line-height: 1.6;
+    color: #1e2032;
+    font-size: 14px;
+    font-weight: bold;
+    
+}
+
+.meal-text {
+    color: #1e2032;
+
+}
+
+.delete-btn {
+    margin-top: 20px;
+    margin-left: 150px;
+}
 
 
+/*SEARCH PLACES PAGE*/
+
+
+#places-page-content {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+#places-page-map {
+    margin-top: 100px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.save-btn {
+    margin-left: 30px;
+}
+
+/*USER SEARCH RESULT PAGE*/
+
+.user-search-page-p {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
 
 
 

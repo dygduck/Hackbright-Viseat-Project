@@ -8,170 +8,55 @@
     <div class="row" id="welcome">
     {% if trips_dict == {} %}
     <section class="col-xs-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2" id="user-page-welcome-empty">
-    <p>Hey {{ user.fname }}, you haven't planned any trips yet! You know what, for your next visit you can pick from many inspiring cities around the world like Barcelona, Hong Kong, London, Istanbul, Paris and many more.. Just give us your arrival and departure dates and wait! We'll be connecting through Yelp's API to bring you awesome places matching with how many times you'll be able to eat during your stay there. We also use Google Map's API to show you these awesome places' location.</p>
+    <p class="user-page-p">Hey {{ user.fname }}, you haven't planned any trips yet! You know what, for your next visit you can pick from many inspiring cities around the world like Barcelona, Hong Kong, London, Istanbul, Paris and many more.. Just give us your arrival and departure dates and wait! We'll be connecting through Yelp's API to bring you awesome places matching with how many times you'll be able to eat during your stay there. We also use Google Map's API to show you these awesome places' location.</p>
     </section>
     <section class="col-xs-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2" id="empty-user-page-search">
     <form method="GET" action="/places">
-    <div>
+    <div class="form-group">
         <label>City</label>
-        <select name="city_id" required>
+        <select class="form-control" name="city_id" required>
             {% for city in cities %}
             <option value="{{city.city_id}}">{{city.city_name}}</option>
             {% endfor %}
         </select>
     </div>
-    <div>
+    <div class="form-group">
     <label>Arrival Date</label>
-    <input type="datetime-local" name="arrival_date" required>
+    <input type="datetime-local" class="form-control" name="arrival_date" required>
     </div>
-    <div>
+    <div class="form-group">
     <label>Departure Date</label>
-    <input type="datetime-local" name="departure_date" required>
+    <input type="datetime-local" class="form-control" name="departure_date" required>
     </div>
-    <input type="submit" value="Search!">
+    <button type="submit" class="btn btn-default" value="Search">Search</button>
+    <!-- <input type="submit" value="Search!"> -->
     </form>
-    <form action="/logout" method="GET">
+    <!-- <form action="/logout" method="GET">
     <input type="submit" value="Logout">
-    </form>
+    </form> -->
     </section>
     {% else %}
 
     <section class="col-xs-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2" id="user-page-welcome-full">
-    <p>Hi {{ user.fname }}, welcome back, would you like to make some trips? You know what, for your next visit you can pick from many inspiring cities around the world like Barcelona, Hong Kong, London, Istanbul, Paris and many more.. Just give us your arrival and departure dates and wait! We'll be connecting through Yelp's API to bring you awesome places matching with how many times you'll be able to eat during your stay there. We also use Google Map's API to show you these awesome places' location.</p>
+    <p class="user-page-p">Hi {{ user.fname }}, welcome back, would you like to make some trips? You know what, for your next visit you can pick from many inspiring cities around the world like Barcelona, Hong Kong, London, Istanbul, Paris and many more.. Just give us your arrival and departure dates and wait! We'll be connecting through Yelp's API to bring you awesome places matching with how many times you'll be able to eat during your stay there. We also use Google Map's API to show you these awesome places' location.</p>
     </section>
-    <section class="col-xs-12 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1" id="user-page-welcome-full">
-        <form  id="user-all-trips" method="POST" action="/delete_places">
-    <ul>
-        {% for arrival_date, trip in trips_dict.iteritems()|sort %}
-        <li><input class='trip-checkbox' type='checkbox' name='trip' value="{{ trip.trip_id }}">{{ arrival_date }} - {{ trip.departure_date }} - {{ trip.city_name }}
-        <ul>
-            {% for date, meals in trip.dates.iteritems()|sort %}
-            <li><input class='date-checkbox' type='checkbox' name='date' value='{{trip.trip_id}}:{{date}}'>{{ date }}
-                <ul>
-                    {% if "breakfast" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.breakfast.saved_place_id}}'>breakfast:<a href="{{ meals.breakfast.url }}"> {{ meals.breakfast.name }}</a></li>
-                    {% endif %}
-                    {% if "lunch" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.lunch.saved_place_id}}'>lunch:<a href="{{ meals.lunch.url }}"> {{ meals.lunch.name }}</a></li>
-                    {% endif %}
-                    {% if "dinner" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.dinner.saved_place_id}}'>dinner:<a href="{{ meals.dinner.url }}"> {{ meals.dinner.name }}</a></li>
-                    {% endif %}
-                </ul>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endfor %}
-    </li>
-    </ul>
-        <input id="delete-button" type="submit" value="Delete">
-</form>
-
-    </section>
-
-    <section class="col-xs-12 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1" id="user-page-search">
-    <form method="GET" action="/places">
-    <div>
-        <label>City</label>
-        <select name="city_id" required>
-            {% for city in cities %}
-            <option value="{{city.city_id}}">{{city.city_name}}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-    <label>Arrival Date</label>
-    <input type="datetime-local" name="arrival_date" required>
-    </div>
-    <div>
-    <label>Departure Date</label>
-    <input type="datetime-local" name="departure_date" required>
-    </div>
-    <input type="submit" value="Search!">
-    </form>
-    <form action="/logout" method="GET">
-    <input type="submit" value="Logout">
-    </form>
-    </section>
-    {% endif %}
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- <div class="row" id="saved-places">
-    {% if trips_dict == {} %}
-    <section class="col-xs-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2" id="user-page-welcome-empty">
-    <p>Hey, you haven't planned any trips yet! You know what, for your next visit you can pick from many inspiring cities around the world like Barcelona, Hong Kong, London, Istanbul, Paris and many more.. Just give us your arrival and departure dates and wait! We'll be connecting through Yelp's API to bring you awesome places matching with how many times you'll be able to eat during your stay there. We also use Google Map's API to show you these awesome places' location.</p>
-
-    <form method="GET" action="/places">
-    <div>
-        <label>City</label>
-        <select name="city_id" required>
-            {% for city in cities %}
-            <option value="{{city.city_id}}">{{city.city_name}}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <label>Arrival Date</label>
-        <input type="datetime-local" name="arrival_date" required>
-    </div>
-    <div>
-        <label>Departure Date</label>
-        <input type="datetime-local" name="departure_date" required>
-    </div>
-    <input type="submit" value="Search!">
-</form>
-<form action="/logout" method="GET">
-      <input type="submit" value="Logout">
-</form>
-</section>
-
-    {% else %}
-
-
-
-
-    <section class="col-xs-12 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1" id="user-page-welcome-full">
-    <p>Hi {{ user.fname }}, welcome back, would you like to make some trips? You know what, for your next visit you can pick from many inspiring cities around the world like Barcelona, Hong Kong, London, Istanbul, Paris and many more.. Just give us your arrival and departure dates and wait! We'll be connecting through Yelp's API to bring you awesome places matching with how many times you'll be able to eat during your stay there. We also use Google Map's API to show you these awesome places' location.</p><br>
+    <section class="col-xs-12 col-md-5 col-lg-5 col-md-offset-1 col-lg-offset-1" id="user-page-welcome-full">
     <form  id="user-all-trips" method="POST" action="/delete_places">
     <ul>
         {% for arrival_date, trip in trips_dict.iteritems()|sort %}
-        <li><input class='trip-checkbox' type='checkbox' name='trip' value="{{ trip.trip_id }}">{{ arrival_date }} - {{ trip.departure_date }} - {{ trip.city_name }}
+        <li><input class='trip-checkbox' type='checkbox' name='trip' value="{{ trip.trip_id }}"><span class="trip-text">{{ arrival_date }} - {{ trip.departure_date }} - {{ trip.city_name }}</span>
         <ul>
             {% for date, meals in trip.dates.iteritems()|sort %}
-            <li><input class='date-checkbox' type='checkbox' name='date' value='{{trip.trip_id}}:{{date}}'>{{ date }}
+            <li><input class='date-checkbox' type='checkbox' name='date' value='{{trip.trip_id}}:{{date}}'><span class="date-text">{{ date }}</span>
                 <ul>
                     {% if "breakfast" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.breakfast.saved_place_id}}'>breakfast:<a href="{{ meals.breakfast.url }}"> {{ meals.breakfast.name }}</a></li>
+                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.breakfast.saved_place_id}}'><span class="meal-text">Breakfast:</span><a href="{{ meals.breakfast.url }}"> {{ meals.breakfast.name }}</a></li>
                     {% endif %}
                     {% if "lunch" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.lunch.saved_place_id}}'>lunch:<a href="{{ meals.lunch.url }}"> {{ meals.lunch.name }}</a></li>
+                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.lunch.saved_place_id}}'><span class="meal-text">Lunch:</span><a href="{{ meals.lunch.url }}"> {{ meals.lunch.name }}</a></li>
                     {% endif %}
                     {% if "dinner" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.dinner.saved_place_id}}'>dinner:<a href="{{ meals.dinner.url }}"> {{ meals.dinner.name }}</a></li>
+                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.dinner.saved_place_id}}'><span class="meal-text">Dinner:</span><a href="{{ meals.dinner.url }}"> {{ meals.dinner.name }}</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -180,134 +65,41 @@
         {% endfor %}
     </li>
     </ul>
-        <input id="delete-button" type="submit" value="Delete">
+    <button type="submit" class="btn btn-default delete-btn" value="Delete">Delete</button>
 </form>
-</section>
-<section class="col-xs-12 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1" id="user-page-search-form">
+
+    </section>
+
+    <section class="col-xs-12 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1" id="user-page-search">
     <form method="GET" action="/places">
-    <div>
+    <div class="form-group">
         <label>City</label>
-        <select name="city_id" required>
+        <select class="form-control" name="city_id" required>
             {% for city in cities %}
             <option value="{{city.city_id}}">{{city.city_name}}</option>
             {% endfor %}
         </select>
     </div>
-    <div>
-        <label>Arrival Date</label>
-        <input type="datetime-local" name="arrival_date" required>
+    <div class="form-group">
+    <label>Arrival Date</label>
+    <input type="datetime-local" class="form-control" name="arrival_date" required>
     </div>
-    <div>
-        <label>Departure Date</label>
-        <input type="datetime-local" name="departure_date" required>
+    <div class="form-group">
+    <label>Departure Date</label>
+    <input type="datetime-local" class="form-control" name="departure_date" required>
     </div>
-    <input type="submit" value="Search!">
-</form>
-<form action="/logout" method="GET">
-      <input type="submit" value="Logout">
-</form>
-</section>
-{% endif %}
-
-    </div> -->
-
+    <button type="submit" class="btn btn-default" value="Search">Search</button>
+    <!-- <input type="submit" value="Search!"> -->
+    </form>
+<!--     <form action="/logout" method="GET">
+    <input type="submit" value="Logout">
+    </form> -->
+    </section>
+    {% endif %}
+    </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <p>Hi {{ user.fname }}, would you like to make some trips?</p><br> -->
-<!-- <div>
-{% if trips_dict == {} %}
-    <p>Hey, you haven't planned any trips yet!</p>
-{% else %}
-<form  id="user-all-trips" method="POST" action="/delete_places">
-    <ul>
-        {% for arrival_date, trip in trips_dict.iteritems()|sort %}
-        <li><input class='trip-checkbox' type='checkbox' name='trip' value="{{ trip.trip_id }}">{{ arrival_date }} - {{ trip.departure_date }} - {{ trip.city_name }}
-        <ul>
-            {% for date, meals in trip.dates.iteritems()|sort %}
-            <li><input class='date-checkbox' type='checkbox' name='date' value='{{trip.trip_id}}:{{date}}'>{{ date }}
-                <ul>
-                    {% if "breakfast" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.breakfast.saved_place_id}}'>breakfast:<a href="{{ meals.breakfast.url }}"> {{ meals.breakfast.name }}</a></li>
-                    {% endif %}
-                    {% if "lunch" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.lunch.saved_place_id}}'>lunch:<a href="{{ meals.lunch.url }}"> {{ meals.lunch.name }}</a></li>
-                    {% endif %}
-                    {% if "dinner" in meals %}
-                        <li><input class='place-checkbox' type='checkbox' name='saved_place' value='{{ meals.dinner.saved_place_id}}'>dinner:<a href="{{ meals.dinner.url }}"> {{ meals.dinner.name }}</a></li>
-                    {% endif %}
-                </ul>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endfor %}
-    </li>
-    </ul>
-        <input id="delete-button" type="submit" value="Delete">
-</form>
-{% endif %}
-</div> -->
-
-<!-- <form method="GET" action="/places">
-    <div>
-        <label>City</label>
-        <select name="city_id" required>
-            {% for city in cities %}
-            <option value="{{city.city_id}}">{{city.city_name}}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <label>Arrival Date</label>
-        <input type="datetime-local" name="arrival_date" required>
-    </div>
-    <div>
-        <label>Departure Date</label>
-        <input type="datetime-local" name="departure_date" required>
-    </div>
-    <input type="submit" value="Search!">
-</form>
-<form action="/logout" method="GET">
-      <input type="submit" value="Logout">
-</form> -->
-
 <script src="../static/js/delete_places.js"></script>
-
 {% endblock %}
-
 
 
 

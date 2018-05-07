@@ -2,31 +2,51 @@
 {% block title %}Where To Eat{% endblock %}
 
 {% block content %}
-<h2>Here are some places</h2>
-<ul>
-<form method="POST" action="/save_places">
-<input type="hidden" name="city_id" value="{{city_id}}">
-<input type="hidden" name="arrival_date" value="{{arrival_date}}">
-<input type="hidden" name="departure_date" value="{{departure_date}}">
 
-{% for date in ordered_days_to_eat %}
-<li>{{ date }}</li>
-    {% for business in ordered_days_to_eat[date] %}
-    <input type="checkbox" name="saved_businesses" value="{{business.id}}">{{business.meal}}:<a href="{{ business.url }}">{{ business.name }}</a><br>
-    <input type="hidden" name="{{business.id+'__label'}}" value="{{business.meal}}">
-    <input type="hidden" name="{{business.id+'__date'}}" value="{{date}}">
-    <input class="place-name" type="hidden" name="{{business.id+'__name'}}" value="{{business.name}}">
-    <input type="hidden" name="{{business.id+'__url'}}" value="{{business.url}}">
-    <input class="place-latitude" type="hidden" name="{{business.id+'__latitude'}}" value="{{business.coordinates.latitude}}">
-    <input class="place-longitude" type="hidden" name="{{business.id+'__longitude'}}" value="{{business.coordinates.longitude}}">
-    {% endfor %}
-{% endfor %}
-<div>
-    <button type="submit">Save</button>
-</div>
-</form>
-</ul>
-<div id="map" style="height: 400px; width: 500px;">
+
+<div class="container-fluid">
+    <div class="row" id="places-page">
+        <div class="col-xs-12 col-md-5 col-lg-5 col-md-offset-1 col-lg-offset-1" id="places-page-content">
+        <h2>Here are some places: </h2>
+        <form method="POST" action="/save_places">
+            <input type="hidden" name="city_id" value="{{city_id}}">
+            <input type="hidden" name="arrival_date" value="{{arrival_date}}">
+            <input type="hidden" name="departure_date" value="{{departure_date}}">
+            <ul>
+            {% for date in ordered_days_to_eat %}
+            <li class="date-checkbox"><span class="date-text">{{ date }}</span></li>
+                {% for business in ordered_days_to_eat[date] %}
+                <input type="checkbox" name="saved_businesses" value="{{business.id}}"><span class="meal-text">{{business.meal}}:</span><a href="{{ business.url }}"> {{ business.name }}</a><br>
+                <input type="hidden" name="{{business.id+'__label'}}" value="{{business.meal}}">
+                <input type="hidden" name="{{business.id+'__date'}}" value="{{date}}">
+                <input class="place-name" type="hidden" name="{{business.id+'__name'}}" value="{{business.name}}">
+                <input type="hidden" name="{{business.id+'__url'}}" value="{{business.url}}">
+                <input class="place-latitude" type="hidden" name="{{business.id+'__latitude'}}" value="{{business.coordinates.latitude}}">
+                <input class="place-longitude" type="hidden" name="{{business.id+'__longitude'}}" value="{{business.coordinates.longitude}}">
+                {% endfor %}
+            {% endfor %}
+            </ul>
+            <div>
+            <button type="submit" class="btn btn-default save-btn" value="Save">Save</button>
+            </div>
+            </form>
+        </div>
+
+        <div class="col-xs-12 col-md-5 col-lg-5" id="places-page-map">
+            <div id="map" style="height: 200px; width: 300px; zoom:2;">
+            </div>
+        </div>
+    </div>
 </div>
 <script src="../static/js/map.js"></script>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
