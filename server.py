@@ -506,7 +506,7 @@ def delete_places():
 if __name__ == '__main__':
     # Setting debug=True gives us error messages in the browser and also
     # "reloads" our web app if we change the code.
-    app.debug = True
+    # app.debug = True
     # DebugToolbarExtension(app)
     # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     connect_to_db(app)
