@@ -4,14 +4,15 @@
 {% block title %}Logged In{% endblock %}
 
 {% block content %}
+<div class="page"></div>
 <div class="container-fluid">
     <div class="row" id="search-user-page">
         <section class="col-xs-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2" id="search-user-page-welcome">
-        <h3>It is easy to Viseat!</h3>
-        <p class="user-search-page-p">Hi, this is {{ user.fname }}'s page.</p><br>
+        <h3>It is easy to GoVisEat!</h3>
+        <p class="user-search-page-p">Hi, this is {{ user.fname }}'s page. Here you see {{ user.fname }}'s saved trips!</p><br>
 {% if trips_dict == {} %}
     <p class="users_search-page-p">Apparently, {{ user.fname }} hasn't planned any trips yet!</p>
-    <img src="/static/images/food9.jpg" class="img-responsive" alt="meal image" id="rome-photo">
+    <!-- <img src="/static/images/food9.jpg" class="img-responsive" alt="meal image" id="rome-photo"> -->
 {% else %}
     <ul>
         {% for arrival_date, trip in trips_dict.iteritems()|sort %}
@@ -21,13 +22,13 @@
             <li><span class="date-text">{{ date }}</span>
                 <ul>
                     {% if "breakfast" in meals %}
-                        <li><span class="meal-text">breakfast: </span><a href="{{ meals.breakfast.url }}"> {{ meals.breakfast.name }}</a></li>
+                        <li><span class="meal-text"> Breakfast: </span><a href="{{ meals.breakfast.url }}" target="_blank"> {{ meals.breakfast.name }}</a></li>
                     {% endif %}
                     {% if "lunch" in meals %}
-                        <li><span class="meal-text">lunch: </span><a href="{{ meals.lunch.url }}"> {{ meals.lunch.name }}</a></li>
+                        <li><span class="meal-text"> Lunch: </span><a href="{{ meals.lunch.url }}" target="_blank"> {{ meals.lunch.name }}</a></li>
                     {% endif %}
                     {% if "dinner" in meals %}
-                        <li><span class="meal-text">dinner: </span><a href="{{ meals.dinner.url }}"> {{ meals.dinner.name }}</a></li>
+                        <li><span class="meal-text"> Dinner: </span><a href="{{ meals.dinner.url }}" target="_blank"> {{ meals.dinner.name }}</a></li>
                     {% endif %}
                 </ul>
             </li>

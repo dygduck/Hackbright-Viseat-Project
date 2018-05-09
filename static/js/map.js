@@ -23,7 +23,7 @@ for (var i = 0 ; i< $placeNames.length; i += 1) {
 //     ];
 
 var map = new google.maps.Map(document.getElementById('map'), {
-  zoom: 10,
+  zoom: 12,
   center: new google.maps.LatLng($placeLatitudes[0].value, $placeLongitudes[0].value),
   mapTypeId: google.maps.MapTypeId.ROADMAP
 });
