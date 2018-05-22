@@ -26,8 +26,11 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 Languages: Python, JS, HTML, CSS, SQL
+
 Frameworks and Templates: Flask, Jinja, Bootstrap
+
 Other Technologies: Ajax, jQuery, SQLAlchemy, PostgreSQL
+
 APIs: YELP, Google Maps
 
 
