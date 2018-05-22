@@ -63,7 +63,7 @@ Get keys to the [Yelp](https://www.yelp.com/developers/documentation/v3) and [Go
 Store them in a secrets.sh file:
 
 ```sh
-export YELP_API_KEY="ABC
+export YELP_API_KEY="ABC"
 ```
 
 Create your database.
