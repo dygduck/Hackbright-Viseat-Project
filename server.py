@@ -110,7 +110,6 @@ def search_user():
     print user
     if not user:
         flash("oops! username doesn't exist.")
-        # return render_template("/")
         return redirect(request.referrer)
     else:
         return redirect("/users/{}".format(user.username))
@@ -386,7 +385,7 @@ def query_api(city_name, meal, num_of_meals, num_of_offsets):
         businesses = []
 
     # print meal
-    print businesses
+    # print businesses
     # print "number of businesses"
     # print len(businesses)
     return businesses
@@ -476,15 +475,10 @@ def delete_places():
             # print("Deleting trip second loop: {}".format(trip))
             db.session.delete(trip)
 
-    
+
     db.session.commit()
 
     return "delete completed"
-
-
-
-
-
 
 
 

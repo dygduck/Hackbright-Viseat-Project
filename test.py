@@ -85,13 +85,6 @@ class LoggedOutUserTest(TestCase):
         self.assertIn("Duygu's page.", result.data)
         self.assertNotIn("make some trips?", result.data)
 
-    # def test_show_non_user_page(self):
-    #     """Test if searched for a non user."""
-    #     result = self.client.get("/users/dumbo",
-    #                              follow_redirects=True)
-    #     self.assertEqual(result.status_code, 200)
-    #     self.assertIn("oops! username doesn't exist.", result.data)
-    #     self.assertNotIn("Dumbo's page", result.data)
 
     def test_register_form(self):
         """ Test if register form shows up."""
@@ -191,17 +184,6 @@ class LoggedInUser(TestCase):
         self.assertIn("2018-04-28", result.data)
         self.assertIn("breakfast:", result.data)
 
-    # def test_saved_places_of_user(self):
-    #     """Test if user can save places."""
-    #     result = self.client.post("/save_place",
-    #                               data={"saved_businesses": "something",
-    #                               "city_id": 1,
-    #                               "arrival_date":"dkdkdkd",
-    #                               "departure_date": "dhdhdhd"},
-    #                               follow_redirects=True)
-    #     self.assertEqual(result.status_code, 200)
-    #     self.assertIn("User harry@gmail.com added", result.data)
-
     def test_user_loggout(self):
         """Test logout process."""
         result = self.client.get("/logout", follow_redirects=True)
@@ -227,51 +209,6 @@ class LoggedInUser(TestCase):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class FlaskTestsDatabase(TestCase):
-#     """Flask tests that use the database."""
-
-#     def setUp(self):
-#         """Stuff to do before every test."""
-
-#         # Get the Flask test client
-#         self.client = app.test_client()
-#         app.config['TESTING'] = True
-
-#         # Connect to test database
-#         connect_to_db(app, "postgresql:///testdb")
-
-#         # Create tables and add sample data
-#         db.create_all()
-#         seed_user()
-#         seed_city()
-
-#     def tearDown(self):
-#         """Do at end of every test."""
-
-#         db.session.close()
-#         db.drop_all()
 
 
 
